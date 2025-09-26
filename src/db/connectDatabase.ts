@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
+import sequelize from "./sequelize";
+import "./models/associates";
 
 const connectDatabase = async () => {
   try {
-    await mongoose.connect(String(process.env.MONGO_CONNECTION));
+    await sequelize.authenticate();
     console.log(
       "--- Connection to the database has been established successfully. ---"
     );

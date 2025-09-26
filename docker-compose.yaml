@@ -1,15 +1,14 @@
 services:
-  mongodb:
-    image: mongo
-    container_name: mongodb_ichgram
+  postgres:
+    image: postgres
+    container_name: pg_ichgram
     restart: always
     env_file:
       - ./.env
     ports:
-      - "27017:27017"
+      - "5432:5432"
     volumes:
-      - mongo_data:/data/db
+      - db_data:/var/lib/postgresql/data
 
 volumes:
-  mongo_data:
-    driver: local
+  db_data:
