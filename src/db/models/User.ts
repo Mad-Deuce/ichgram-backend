@@ -16,7 +16,7 @@ const User = sequelize.define("user", {
       },
     },
   },
-  verified: {
+  isVerified: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
@@ -25,21 +25,10 @@ const User = sequelize.define("user", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  mustChangePassword: {
-    type: DataTypes.BOOLEAN,
+  role: {
+    type: DataTypes.ENUM("user", "admin"),
     allowNull: false,
-    defaultValue: false,
-  },
-  roleId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 3,
-    references: {
-      model: "roles",
-      key: "id",
-    },
-    onUpdate: "CASCADE",
-    onDelete: "SET NULLS",
+    defaultValue: "user",
   },
   fullname: {
     type: DataTypes.STRING,

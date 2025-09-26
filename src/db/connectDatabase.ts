@@ -1,7 +1,7 @@
 import sequelize from "./sequelize";
 import "./models/associates";
 
-const connectDatabase = async () => {
+const connectDatabase = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
     console.log(

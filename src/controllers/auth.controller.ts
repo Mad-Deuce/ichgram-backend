@@ -12,7 +12,10 @@ import {
   confirmResetPassword,
 } from "../services/auth.service";
 
-export const signupController = async (req: Request, res: Response) => {
+export const signupController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const email = await signupUser(req.body);
   res.status(201).json({
     message: `Signup successfully, a message containing a confirmation link has been sent to email: ${email}`,

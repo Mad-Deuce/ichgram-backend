@@ -19,7 +19,7 @@ import {
   confirmResetPasswordController,
 } from "../controllers/auth.controller";
 
-const authRouter = Router();
+const authRouter: Router = Router();
 
 authRouter.post("/signup", validateBody(signupSchema), signupController);
 authRouter.get("/signup", checkConfirmationByEmail, emailConfirmController);

@@ -10,7 +10,6 @@ import createTokens from "../utils/createTokens";
 
 import User from "../db/models/User";
 import Session from "../db/models/Session";
-import Role from "../db/models/Role";
 
 const { BASE_URL, FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
@@ -20,13 +19,9 @@ export const signupUser = async (payload: any) => {
     const { password, email } = payload;
     const passwordHash = await hashPassword(password);
 
-    const role = await Role.findOne({ where: { name: "user" } });
-    if (!role) throw new HttpError(500, "Role 'user' not found");
-
     await User.create(
       {
         ...payload,
-        roleId: role.get("id"),
         password: passwordHash,
       },
       { transaction }
@@ -37,7 +32,7 @@ export const signupUser = async (payload: any) => {
     const verifyEmail = {
       to: email,
       subject: "Verify email",
-      html: `<a href="${BASE_URL}/api/auth/signup?token=${confirmationToken}" target="_blank">Confirm email</a>`,
+      html: `<a href="${FRONTEND_BASE_URL}/api/auth/signup?token=${confirmationToken}" target="_blank">Confirm email</a>`,
     };
 
     await sendEmail(verifyEmail);

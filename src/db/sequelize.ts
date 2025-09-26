@@ -1,10 +1,10 @@
-import { Sequelize } from "sequelize";
+import { Options, Sequelize } from "sequelize";
 
 import configData from "./config/config";
 
-const env = process.env.NODE_ENV || "development";
-const config = configData[env];
+const env: string = process.env.NODE_ENV || "development";
+const config: Options | undefined = configData[env];
 
-const sequelize = new Sequelize({...config} );
+const sequelize: Sequelize = new Sequelize({ ...config });
 
 export default sequelize;
