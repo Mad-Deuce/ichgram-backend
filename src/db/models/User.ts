@@ -11,7 +11,7 @@ const User = sequelize.define("user", {
     unique: true,
     validate: {
       is: {
-        args: emailPattern.value,
+        args: emailPattern.regexp,
         msg: emailPattern.message,
       },
     },

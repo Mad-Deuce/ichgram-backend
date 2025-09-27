@@ -40,7 +40,7 @@ export const signupUser = async (payload: any) => {
     return email;
   } catch (error: any) {
     await transaction.rollback();
-    throw new HttpError(500, error.message);
+    throw error;
   }
 };
 

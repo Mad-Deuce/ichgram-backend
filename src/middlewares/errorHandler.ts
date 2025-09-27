@@ -16,11 +16,11 @@ const errorHandler = (error: any, req: Request, res: Response, next: any) => {
 
   if (error instanceof ValidationError) {
     status = 400;
+    message = error.errors.map(({ message }) => message).join();
   }
 
   if (error instanceof UniqueConstraintError) {
     status = 409;
-    message = error.original.message;
   }
 
   res.status(status).json({ message });
