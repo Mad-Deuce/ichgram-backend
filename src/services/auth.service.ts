@@ -32,7 +32,7 @@ export const signupUser = async (payload: any) => {
     const verifyEmail = {
       to: email,
       subject: "Verify email",
-      html: `<a href="${FRONTEND_BASE_URL}/api/auth/signup?token=${confirmationToken}" target="_blank">Confirm email</a>`,
+      html: `<a href="${FRONTEND_BASE_URL}/confirm?token=${confirmationToken}" target="_blank">Confirm email</a>`,
     };
 
     await sendEmail(verifyEmail);
@@ -48,7 +48,7 @@ export const confirmEmail = async (user: Model) => {
   if (!user) {
     throw new HttpError(404, "User not found");
   }
-  await user.update({ verified: true });
+  await user.update({ isVerified: true });
 };
 
 export const loginUser = async (email: string, loginPassword: string) => {
