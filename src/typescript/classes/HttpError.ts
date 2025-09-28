@@ -8,7 +8,10 @@ const messageList: { [key: number]: string } = {
 
 class HttpError extends Error {
   status: number;
-  constructor(status: number, message: string) {
+  constructor(
+    status: number,
+    message: string | undefined = messageList[status]
+  ) {
     super(message);
     this.status = status;
   }

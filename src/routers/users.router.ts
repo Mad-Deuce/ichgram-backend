@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import authenticate from "../middlewares/authenticate";
-import checkConfirmationByEmail from "../middlewares/checkConfirmationByEmail";
+import checkQueryToken from "../middlewares/checkQueryToken";
 
 import checkRole from "../decorators/checkRole";
 import validateBody from "../decorators/validateBody";
@@ -15,14 +15,13 @@ import {
   updateEmailController,
   confirmCurrentEmailController,
   confirmNewEmailController,
-  updateRoleController
+  updateRoleController,
 } from "../controllers/users.controller";
-
 
 const usersRouter = Router();
 
 usersRouter.delete("/delete", authenticate, deleteController);
-usersRouter.get("/delete", checkConfirmationByEmail, confirmDeleteController);
+usersRouter.get("/delete", checkQueryToken, confirmDeleteController);
 
 usersRouter.put(
   "/",
@@ -38,20 +37,12 @@ usersRouter.put(
   updateEmailController
 );
 
-usersRouter.get(
-  "/email",
-  checkConfirmationByEmail,
-  confirmCurrentEmailController
-);
-usersRouter.get(
-  "/new-email",
-  checkConfirmationByEmail,
-  confirmNewEmailController
-);
+usersRouter.get("/email", checkQueryToken, confirmCurrentEmailController);
+usersRouter.get("/new-email", checkQueryToken, confirmNewEmailController);
 
 usersRouter.put(
   "/:id/role",
-  authenticate, 
+  authenticate,
   checkRole(["super"]),
   validateBody(roleSchema),
   updateRoleController

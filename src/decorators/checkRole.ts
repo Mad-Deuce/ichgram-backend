@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-
-import HttpError from "../utils/HttpError";
+import HttpError from "../typescript/classes/HttpError";
 
 const checkRole = (roles: string[]) => {
   const checkRolesMiddleware = async (

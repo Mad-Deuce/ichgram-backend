@@ -2,15 +2,15 @@ import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../sequelize";
 
-import {
-  emailPattern,
-} from "../../validation/patterns/auth.patterns";
+import Roles from "../../constants/Roles";
+
+import { emailPattern } from "../../validation/patterns/auth.patterns";
 
 export interface IUser {
   email: string;
   isVerified?: boolean;
   password: string;
-  role?: string;
+  role?: Roles;
   fullname?: string;
   username?: string;
 }
@@ -40,9 +40,10 @@ User.init(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM("user", "admin"),
+      type: DataTypes.ENUM,
+      values: Object.values(Roles),
       allowNull: false,
-      defaultValue: "user",
+      defaultValue: Roles.USER,
     },
     fullname: {
       type: DataTypes.STRING,
@@ -54,8 +55,8 @@ User.init(
     },
   },
   {
-    sequelize, 
-    modelName: "user", 
+    sequelize,
+    modelName: "user",
   }
 );
 

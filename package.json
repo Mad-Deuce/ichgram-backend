@@ -13,9 +13,9 @@
     "migration:down": "npx sequelize-cli db:migrate:undo:all",
     "seed:up": "npx sequelize-cli db:seed:all",
     "seed:down": "npx sequelize-cli db:seed:undo:all",
-    "start": "ts-node ./src/index.ts",
-    "dev": "nodemon --exec ts-node src/index.ts",
-    "build": "npx tsc"
+    "start": "npm run build && node dist/index.ts",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

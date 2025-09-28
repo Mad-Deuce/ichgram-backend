@@ -3,7 +3,7 @@ import { Model, Transaction } from "sequelize";
 
 import sequelize from "../db/sequelize";
 
-import HttpError from "../utils/HttpError";
+import HttpError from "../typescript/classes/HttpError";
 import sendEmail from "../utils/sendEmail";
 import { hashPassword, comparePassword } from "../utils/hashPassword";
 import createTokens, { ITokens } from "../utils/createTokens";
@@ -46,10 +46,7 @@ export const signupUser = async (payload: IUser): Promise<string> => {
   }
 };
 
-export const confirmEmail = async (user: Model) => {
-  if (!user) {
-    throw new HttpError(404, "User not found");
-  }
+export const confirmEmail = async (user: User): Promise<void> => {
   await user.update({ isVerified: true });
 };
 

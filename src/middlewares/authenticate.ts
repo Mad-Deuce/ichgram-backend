@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
+// import { AuthRequest } from "../typescript/interfaces";
+
 // Extend Express Request interface to include 'auth'
 declare global {
   namespace Express {
@@ -10,7 +12,7 @@ declare global {
   }
 }
 
-import HttpError from "../utils/HttpError";
+import HttpError from "../typescript/classes/HttpError";
 
 import Session from "../db/models/Session";
 import User from "../db/models/User";

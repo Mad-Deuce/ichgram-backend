@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi, {ObjectSchema} from "joi";
 
 import {
   emailPattern,
@@ -6,6 +6,7 @@ import {
   fullnamePattern,
   usernamePattern,
 } from "../patterns/auth.patterns";
+
 
 export const signupSchema = Joi.object({
   email: Joi.string().trim().pattern(emailPattern.regexp).min(5).required(),

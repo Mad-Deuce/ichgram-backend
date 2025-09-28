@@ -7,7 +7,7 @@ import {
   passwordSchema,
 } from "../validation/schemas/auth.schemas";
 import authenticate from "../middlewares/authenticate";
-import checkConfirmationByEmail from "../middlewares/checkConfirmationByEmail";
+import checkQueryToken from "../middlewares/checkQueryToken";
 
 import {
   signupController,
@@ -22,7 +22,7 @@ import {
 const authRouter: Router = Router();
 
 authRouter.post("/signup", validateBody(signupSchema), signupController);
-authRouter.get("/signup", checkConfirmationByEmail, emailConfirmController);
+authRouter.get("/signup", checkQueryToken, emailConfirmController);
 
 // authRouter.post("/login", validateBody(loginSchema), loginController);
 // authRouter.get("/refresh", refreshController);

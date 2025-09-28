@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 
+import { IAuthRequest } from "../typescript/interfaces";
+
 import { setAuthCookies, clearAuthCookies } from "../utils/setupAuthCookies";
 
 import {
@@ -22,9 +24,12 @@ export const signupController = async (
   });
 };
 
-export const emailConfirmController = async (req: Request, res: Response) => {
-  await confirmEmail(req.auth.user);
-  res.json({ message: "Email successfully confirmed, redirect to Login Page" });
+export const emailConfirmController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  await confirmEmail((req as IAuthRequest).user);
+  res.json({ message: "Email successfully confirmed" });
 };
 
 export const loginController = async (req: Request, res: Response) => {

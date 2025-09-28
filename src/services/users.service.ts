@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Model } from "sequelize";
 
-import HttpError from "../utils/HttpError";
+import HttpError from "../typescript/classes/HttpError";
 import sendEmail from "../utils/sendEmail";
 import { hashPassword, comparePassword } from "../utils/hashPassword";
 import createTokens from "../utils/createTokens";
@@ -131,7 +131,7 @@ export const updateRole = async (userId: any, newRole: string) => {
   if (!user) {
     throw new HttpError(404, `User wit id: ${userId} not found`);
   }
-  const role = await  Role.findOne({ where: { name: newRole } });
+  const role = await Role.findOne({ where: { name: newRole } });
   if (!role) {
     throw new HttpError(404, `Role: ${newRole} not found`);
   }

@@ -1,11 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { UniqueConstraintError, ValidationError } from "sequelize";
 import { JsonWebTokenError } from "jsonwebtoken";
 
-import HttpError from "../utils/HttpError";
-
-const errorHandler = (error: any, req: Request, res: Response, next: any) => {
-  console.log(error);
+const errorHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
 
   let status = error.status || 500;
   let message = error.message || "Server error";

@@ -1,13 +1,16 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import { ObjectSchema } from "joi";
 
-import HttpError from "../utils/HttpError";
+import { IMiddleware } from "../typescript/interfaces";
 
-const validateBody = (schema: any) => {
-  const validateBodyMiddleware = async (
+import HttpError from "../typescript/classes/HttpError";
+
+const validateBody = (schema: ObjectSchema) => {
+  const validateBodyMiddleware: IMiddleware = async (
     req: Request,
     res: Response,
-    next: any
-  ) => {
+    next: NextFunction
+  ): Promise<void> => {
     try {
       await schema.validateAsync(req.body, {
         abortEarly: false,
