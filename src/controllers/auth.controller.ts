@@ -29,16 +29,16 @@ export const emailConfirmController = async (req: Request, res: Response) => {
 
 export const loginController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const { user, accessToken, refreshToken } = await loginUser(email, password);
-  setAuthCookies(res, accessToken, refreshToken);
-  res.json({ message: "Login successfully", user });
+  // const { user, accessToken, refreshToken } = await loginUser(email, password);
+  // setAuthCookies(res, accessToken, refreshToken);
+  // res.json({ message: "Login successfully", user });
 };
 
 export const refreshController = async (req: Request, res: Response) => {
   const { user, accessToken, refreshToken } = await refreshTokens(
     req.cookies.refreshToken
   );
-  setAuthCookies(res, accessToken, refreshToken);
+  // setAuthCookies(res, accessToken, refreshToken);
   res.json({ message: "Tokens successfully updated", user });
 };
 

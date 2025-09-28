@@ -17,12 +17,14 @@ const checkConfirmationByEmail = async (
     if (!token) throw new HttpError(401, "Token not found");
 
     const decoded: string | JwtPayload = jwt.verify(token, JWT_SECRET);
+    console.log(decoded);
     let email: string;
     if (typeof decoded === "object" && "email" in decoded) {
       email = decoded.email;
     } else {
       throw new HttpError(401, "Invalid token payload");
     }
+
     const user = await User.findOne({
       where: {
         email,

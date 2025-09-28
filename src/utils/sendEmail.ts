@@ -18,7 +18,7 @@ const transport = nodemailer.createTransport(nodemailerConfig);
 
 const sendEmail = (payload: any) => {
   const email = { ...payload, from: GOOGLE_EMAIL };
-  return transport.sendMail(email);
+  transport.sendMail(email);
 };
 
 export default sendEmail;

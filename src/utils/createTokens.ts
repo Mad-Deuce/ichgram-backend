@@ -1,21 +1,22 @@
 import jwt from "jsonwebtoken";
 
-const {
-  JWT_SECRET = "secret",
-  CONFIRMATION_TOKEN_MAX_AGE_MS = 900000,
-  ACCESS_TOKEN_MAX_AGE_MS = 900000,
-  REFRESH_TOKEN_MAX_AGE_MS = 604800000,
-} = process.env;
+const { JWT_SECRET = "secret" } = process.env;
 
-const createTokens = (payload: any) => {
-  const confirmationToken = jwt.sign({ ...payload }, JWT_SECRET, {
-    expiresIn: Number(CONFIRMATION_TOKEN_MAX_AGE_MS),
+export interface ITokens {
+  confirmationToken: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+const createTokens = (payload: any): ITokens => {
+  const confirmationToken: string = jwt.sign(payload, JWT_SECRET, {
+    expiresIn: "5m",
   });
-  const accessToken = jwt.sign({ ...payload }, JWT_SECRET, {
-    expiresIn: Number(ACCESS_TOKEN_MAX_AGE_MS),
+  const accessToken: string = jwt.sign(payload, JWT_SECRET, {
+    expiresIn: "15m",
   });
-  const refreshToken = jwt.sign({ ...payload }, JWT_SECRET, {
-    expiresIn: Number(REFRESH_TOKEN_MAX_AGE_MS),
+  const refreshToken: string = jwt.sign(payload, JWT_SECRET, {
+    expiresIn: "7d",
   });
 
   return { confirmationToken, accessToken, refreshToken };
