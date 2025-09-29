@@ -10,7 +10,7 @@ export interface ITokens {
 
 const createTokens = (payload: any): ITokens => {
   const confirmationToken: string = jwt.sign(payload, JWT_SECRET, {
-    expiresIn: "5m",
+    expiresIn: "15m",
   });
   const accessToken: string = jwt.sign(payload, JWT_SECRET, {
     expiresIn: "15m",

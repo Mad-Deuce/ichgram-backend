@@ -1,48 +1,34 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-// import { AuthRequest } from "../typescript/interfaces";
-
-// Extend Express Request interface to include 'auth'
-declare global {
-  namespace Express {
-    interface Request {
-      auth: { [key: string]: any };
-    }
-  }
-}
+import { IAuthRequest } from "../typescript/interfaces";
 
 import HttpError from "../typescript/classes/HttpError";
 
 import Session from "../db/models/Session";
-import User, { IUser } from "../db/models/User";
+import User from "../db/models/User";
 
 const { JWT_SECRET = "secret" } = process.env;
 
 const authenticate = async (req: Request, res: Response, next: any) => {
   try {
-    console.log("req.cookies: ", req.cookies);
-    
     const { accessToken } = req.cookies;
     if (!accessToken) throw new HttpError(401, "AccessToken not found");
     jwt.verify(accessToken, JWT_SECRET);
 
-    const session = await Session.findOne({
+    const session: Session | null = await Session.findOne({
       where: { accessToken: accessToken },
-      include: { model: User, as: "user" },
     });
     if (!session) throw new HttpError(401, "Session not found");
-    const { user } = session as any;
-    if (!user) throw new HttpError(401, "User not found");
 
-    if (!req.auth) req.auth = {};
-    req.auth.user = user;
-    req.auth.session = session.toJSON();
+    const user: User | null = await User.findByPk(
+      session.get("userId") as number
+    );
+    if (!user) throw new HttpError(401, "User not found");
+    (req as IAuthRequest).user = user;
 
     next();
   } catch (error) {
-    console.log(error);
-
     throw new HttpError(401, "Invalid token payload");
   }
 };

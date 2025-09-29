@@ -20,7 +20,6 @@ const startServer = (): void => {
   app.use(express.json());
 
   app.use("/api/auth", authRouter);
-  app.get("/api/", authenticate, (req, res, next)=>{ res.json({ message: "Tokens successfully updated"})});
 
   app.use(notFoundHandler);
   app.use(errorHandler);

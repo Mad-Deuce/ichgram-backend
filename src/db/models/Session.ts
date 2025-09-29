@@ -12,9 +12,7 @@ export interface ISession {
   user?: IUser;
 }
 
-class Session extends Model<ISession, ISession> {
-  declare userId: number;
-}
+class Session extends Model<ISession, ISession> {}
 
 Session.init(
   {

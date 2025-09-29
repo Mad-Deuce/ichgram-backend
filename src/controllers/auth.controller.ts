@@ -10,8 +10,8 @@ import {
   loginUser,
   refreshTokens,
   logoutUser,
-  resetUserPassword,
-  confirmResetPassword,
+  resetPassword,
+  updatePassword,
 } from "../services/auth.service";
 import { IUser } from "../db/models/User";
 
@@ -52,24 +52,21 @@ export const refreshController = async (req: Request, res: Response) => {
 };
 
 export const logoutController = async (req: Request, res: Response) => {
-  await logoutUser(req.auth.user.id);
+  // await logoutUser(req.user.id);
   clearAuthCookies(res);
   res.json({ message: "Logout successfully, redirect to Login Page" });
 };
 
 export const resetPasswordController = async (req: Request, res: Response) => {
-  await resetUserPassword(req.query.email);
+  await resetPassword(req.body.email);
   clearAuthCookies(res);
   res.json({
-    message: `Confirm reset password, a message containing a confirmation link has been sent to email: ${req.query.email}`,
+    message: `Confirm reset password, a message containing a confirmation link has been sent to email: ${req.body.email}`,
   });
 };
 
-export const confirmResetPasswordController = async (
-  req: Request,
-  res: Response
-) => {
-  await confirmResetPassword(req.auth.user, req.body.password);
+export const updatePasswordController = async (req: Request, res: Response) => {
+  await updatePassword((req as IAuthRequest).user, req.body.password);
   clearAuthCookies(res);
   res.json({
     message: "Password successfully updated, redirect to Login Page",

@@ -7,7 +7,6 @@ import {
   usernamePattern,
 } from "../patterns/auth.patterns";
 
-
 export const signupSchema = Joi.object({
   email: Joi.string().trim().pattern(emailPattern.regexp).min(5).required(),
   password: Joi.string()
@@ -24,12 +23,17 @@ export const loginSchema = Joi.object({
   password: Joi.string().trim().required(),
 });
 
+export const emailSchema = Joi.object({
+  email: Joi.string().trim().pattern(emailPattern.regexp).min(5).required(),
+});
+
 export const passwordSchema = Joi.object({
   password: Joi.string()
     .trim()
     .pattern(passwordPattern.regexp)
     .min(5)
     .required(),
+  confirmPassword: Joi.ref("password"),
 });
 
 export const updateSchema = Joi.object({

@@ -13,15 +13,23 @@ import Session, { ISession } from "../db/models/Session";
 
 const { FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
-const sendConfirmationEmail = (email: string) => {
+enum emailTypes {
+  VERIFY = "verify",
+  RESET = "reset",
+}
+
+const sendConfirmationEmail = (
+  email: string,
+  type: emailTypes = emailTypes.VERIFY
+) => {
   const { confirmationToken }: ITokens = createTokens({
     email,
   });
 
   const verifyEmail = {
     to: email,
-    subject: "Verify email",
-    html: `<a href="${FRONTEND_BASE_URL}/verify?token=${confirmationToken}" target="_blank">Confirm email</a>`,
+    subject: `${type} email`,
+    html: `<a href="${FRONTEND_BASE_URL}/auth/${type}?token=${confirmationToken}" target="_blank">Confirm email</a>`,
   };
   sendEmail(verifyEmail);
 };
@@ -97,7 +105,7 @@ export const refreshTokens = async (
     });
     if (!session) throw new HttpError(401, "Session not found");
 
-    const user: IUser | undefined = (session.toJSON()).user;
+    const user: IUser | undefined = session.toJSON().user;
     if (!user) throw new HttpError(401, "User not found");
 
     const { id, email, fullname, username } = user;
@@ -116,34 +124,24 @@ export const refreshTokens = async (
   }
 };
 
-export const logoutUser = async (id: number) => {
-  await Session.destroy({ where: { userId: id } });
-};
-
-export const resetUserPassword = async (email: any) => {
-  const user = await User.findOne({
+export const resetPassword = async (email: string) => {
+  const user: User | null = await User.findOne({
     where: { email },
   });
   if (!user) throw new HttpError(404, "User not found");
-
-  const { confirmationToken } = createTokens({ email });
-
-  const verifyEmail = {
-    to: email,
-    subject: "Confirm reset password",
-    html: `<a href="${FRONTEND_BASE_URL}/api/auth/reset-password?token=${confirmationToken}" target="_blank">Confirm reset password</a>`,
-  };
-  await sendEmail(verifyEmail);
+  sendConfirmationEmail(email, emailTypes.RESET);
+  await Session.destroy({ where: { userId: user.get("id") as number } });
 };
 
-export const confirmResetPassword = async (
-  user: Model,
-  newPassword: string
-) => {
+export const updatePassword = async (user: User, newPassword: string) => {
   if (await comparePassword(newPassword, String(user.get("password"))))
-    throw new HttpError(401, "Old and new passwords must not match");
+    throw new HttpError(409, "Old and new passwords must not match");
 
   const passwordHash = await hashPassword(newPassword);
   await user.update({ password: passwordHash });
-  // await Session.destroy({ where: { userId: user.get("id") } });
+  await Session.destroy({ where: { userId: user.get("id") as number } });
+};
+
+export const logoutUser = async (id: number) => {
+  await Session.destroy({ where: { userId: id } });
 };

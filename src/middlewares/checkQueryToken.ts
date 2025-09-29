@@ -36,7 +36,7 @@ const checkQueryToken: IMiddleware = async (
     (req as IAuthRequest).user = user;
     next();
   } catch (error: any) {
-    throw new HttpError(401, error.message);
+    throw new HttpError(404, error.message);
   }
 };
 

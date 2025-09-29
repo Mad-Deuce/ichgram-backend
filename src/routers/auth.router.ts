@@ -4,6 +4,7 @@ import validateBody from "../decorators/validateBody";
 import {
   signupSchema,
   loginSchema,
+  emailSchema,
   passwordSchema,
 } from "../validation/schemas/auth.schemas";
 import authenticate from "../middlewares/authenticate";
@@ -16,7 +17,7 @@ import {
   refreshController,
   logoutController,
   resetPasswordController,
-  confirmResetPasswordController,
+  updatePasswordController,
 } from "../controllers/auth.controller";
 
 const authRouter: Router = Router();
@@ -27,9 +28,16 @@ authRouter.get("/verify", checkQueryToken, emailConfirmController);
 authRouter.post("/login", validateBody(loginSchema), loginController);
 authRouter.get("/refresh", refreshController);
 
+authRouter.post("/reset", validateBody(emailSchema), resetPasswordController);
+authRouter.put(
+  "/update",
+  checkQueryToken,
+  validateBody(passwordSchema),
+  updatePasswordController
+);
+
 // authRouter.get("/logout", authenticate, logoutController);
 
-// authRouter.get("/reset-password", resetPasswordController);
 // authRouter.post(
 //   "/reset-password",
 //   checkConfirmationByEmail,
