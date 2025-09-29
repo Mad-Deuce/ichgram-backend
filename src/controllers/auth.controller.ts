@@ -44,11 +44,11 @@ export const loginController = async (
 };
 
 export const refreshController = async (req: Request, res: Response) => {
-  // const { user, accessToken, refreshToken } = await refreshTokens(
-  //   req.cookies.refreshToken
-  // );
-  // setAuthCookies(res, accessToken, refreshToken);
-  // res.json({ message: "Tokens successfully updated", user });
+  const { user, accessToken, refreshToken } = await refreshTokens(
+    req.cookies.refreshToken
+  );
+  setAuthCookies(res, accessToken, refreshToken);
+  res.json({ message: "Tokens successfully updated", user });
 };
 
 export const logoutController = async (req: Request, res: Response) => {

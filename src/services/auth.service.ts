@@ -9,7 +9,7 @@ import { hashPassword, comparePassword } from "../utils/hashPassword";
 import createTokens, { ITokens } from "../utils/createTokens";
 
 import User, { IUser } from "../db/models/User";
-import Session from "../db/models/Session";
+import Session, { ISession } from "../db/models/Session";
 
 const { FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
@@ -91,24 +91,25 @@ export const refreshTokens = async (
       throw new HttpError(401, "RefreshToken not found");
     jwt.verify(currentRefreshToken, JWT_SECRET);
 
-    const session = await Session.findOne({
+    const session: Session | null = await Session.findOne({
       where: { refreshToken: currentRefreshToken },
       include: { model: User, as: "user" },
     });
     if (!session) throw new HttpError(401, "Session not found");
 
-    // const { user } = session.toJSON();
-    // if (!user) throw new HttpError(401, "User not found");
-    // const { id, email, fullname, username } = user;
+    const user: IUser | undefined = (session.toJSON()).user;
+    if (!user) throw new HttpError(401, "User not found");
 
-    // const { accessToken, refreshToken } = createTokens({ email });
+    const { id, email, fullname, username } = user;
 
-    // await session.update({ accessToken, refreshToken });
+    const { accessToken, refreshToken } = createTokens({ email });
+
+    await session.update({ accessToken, refreshToken });
 
     return {
-      // user: { id, email, fullname, username },
-      // accessToken,
-      // refreshToken,
+      user: { id, email, fullname, username },
+      accessToken,
+      refreshToken,
     };
   } catch (error: any) {
     throw new HttpError(401, error.message);

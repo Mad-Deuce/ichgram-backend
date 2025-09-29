@@ -15,12 +15,14 @@ declare global {
 import HttpError from "../typescript/classes/HttpError";
 
 import Session from "../db/models/Session";
-import User from "../db/models/User";
+import User, { IUser } from "../db/models/User";
 
 const { JWT_SECRET = "secret" } = process.env;
 
 const authenticate = async (req: Request, res: Response, next: any) => {
   try {
+    console.log("req.cookies: ", req.cookies);
+    
     const { accessToken } = req.cookies;
     if (!accessToken) throw new HttpError(401, "AccessToken not found");
     jwt.verify(accessToken, JWT_SECRET);
@@ -30,7 +32,7 @@ const authenticate = async (req: Request, res: Response, next: any) => {
       include: { model: User, as: "user" },
     });
     if (!session) throw new HttpError(401, "Session not found");
-    const { user } = session.toJSON();
+    const { user } = session as any;
     if (!user) throw new HttpError(401, "User not found");
 
     if (!req.auth) req.auth = {};
@@ -39,6 +41,8 @@ const authenticate = async (req: Request, res: Response, next: any) => {
 
     next();
   } catch (error) {
+    console.log(error);
+
     throw new HttpError(401, "Invalid token payload");
   }
 };

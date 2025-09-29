@@ -14,10 +14,12 @@ export const setAuthCookies = (
     .cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: Number(ACCESS_TOKEN_MAX_AGE_MS),
+      sameSite: "lax",
     })
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: Number(REFRESH_TOKEN_MAX_AGE_MS),
+      sameSite: "lax",
     });
 };
 
