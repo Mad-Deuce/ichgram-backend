@@ -7,18 +7,26 @@ import Roles from "../../constants/Roles";
 import { emailPattern } from "../../validation/patterns/auth.patterns";
 
 export interface IUser {
+  id: number;
   email: string;
-  isVerified?: boolean;
+  isVerified: boolean;
   password: string;
-  role?: Roles;
-  fullname?: string;
-  username?: string;
+  role: Roles;
+  fullname: string;
+  username: string;
 }
 
 class User extends Model<IUser, IUser> {}
 
 User.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement:true,
+      primaryKey:true,
+      allowNull: false,
+      unique: true,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,

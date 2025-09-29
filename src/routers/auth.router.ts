@@ -22,9 +22,9 @@ import {
 const authRouter: Router = Router();
 
 authRouter.post("/signup", validateBody(signupSchema), signupController);
-authRouter.get("/signup", checkQueryToken, emailConfirmController);
+authRouter.get("/verify", checkQueryToken, emailConfirmController);
 
-// authRouter.post("/login", validateBody(loginSchema), loginController);
+authRouter.post("/login", validateBody(loginSchema), loginController);
 // authRouter.get("/refresh", refreshController);
 // authRouter.get("/logout", authenticate, logoutController);
 

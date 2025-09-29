@@ -13,12 +13,13 @@ import {
   resetUserPassword,
   confirmResetPassword,
 } from "../services/auth.service";
+import { IUser } from "../db/models/User";
 
 export const signupController = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const email = await signupUser(req.body);
+  const email: string = await signupUser(req.body);
   res.status(201).json({
     message: `Signup successfully, a message containing a confirmation link has been sent to email: ${email}`,
   });
@@ -32,19 +33,22 @@ export const emailConfirmController = async (
   res.json({ message: "Email successfully confirmed" });
 };
 
-export const loginController = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  // const { user, accessToken, refreshToken } = await loginUser(email, password);
-  // setAuthCookies(res, accessToken, refreshToken);
-  // res.json({ message: "Login successfully", user });
+export const loginController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { email, password }: IUser = req.body;
+  const { user, accessToken, refreshToken } = await loginUser(email, password);
+  setAuthCookies(res, accessToken, refreshToken);
+  res.json({ message: "Login successfully", user });
 };
 
 export const refreshController = async (req: Request, res: Response) => {
-  const { user, accessToken, refreshToken } = await refreshTokens(
-    req.cookies.refreshToken
-  );
+  // const { user, accessToken, refreshToken } = await refreshTokens(
+  //   req.cookies.refreshToken
+  // );
   // setAuthCookies(res, accessToken, refreshToken);
-  res.json({ message: "Tokens successfully updated", user });
+  // res.json({ message: "Tokens successfully updated", user });
 };
 
 export const logoutController = async (req: Request, res: Response) => {

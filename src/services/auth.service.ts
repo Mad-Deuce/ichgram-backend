@@ -13,6 +13,19 @@ import Session from "../db/models/Session";
 
 const { FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
+const sendConfirmationEmail = (email: string) => {
+  const { confirmationToken }: ITokens = createTokens({
+    email,
+  });
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a href="${FRONTEND_BASE_URL}/verify?token=${confirmationToken}" target="_blank">Confirm email</a>`,
+  };
+  sendEmail(verifyEmail);
+};
+
 export const signupUser = async (payload: IUser): Promise<string> => {
   const transaction: Transaction = await sequelize.transaction();
   try {
@@ -27,16 +40,7 @@ export const signupUser = async (payload: IUser): Promise<string> => {
       { transaction }
     );
 
-    const { confirmationToken }: ITokens = createTokens({
-      email,
-    });
-
-    const verifyEmail = {
-      to: email,
-      subject: "Verify email",
-      html: `<a href="${FRONTEND_BASE_URL}/confirm?token=${confirmationToken}" target="_blank">Confirm email</a>`,
-    };
-    sendEmail(verifyEmail);
+    sendConfirmationEmail(email);
 
     await transaction.commit();
     return email;
@@ -51,23 +55,29 @@ export const confirmEmail = async (user: User): Promise<void> => {
 };
 
 export const loginUser = async (email: string, loginPassword: string) => {
-  const user = await User.findOne({ where: { email } });
+  const user: User | null = await User.findOne({ where: { email } });
   if (!user) throw new HttpError(401, "Email or password invalid");
-  // const { id, verified, password, fullname, username } = user.toJSON();
+  const { id, isVerified, password, fullname, username }: IUser = user.toJSON();
 
-  // if (!(await comparePassword(loginPassword, password)))
-  //   throw new HttpError(401, "Email or password invalid");
+  if (!(await comparePassword(loginPassword, password)))
+    throw new HttpError(401, "Email or password invalid");
 
-  // if (!verified) throw new HttpError(403, "Email not confirmed");
+  if (!isVerified) {
+    sendConfirmationEmail(email);
+    throw new HttpError(
+      403,
+      `Email not confirmed, a message containing a confirmation link has been sent to email: ${email}`
+    );
+  }
 
-  // await Session.destroy({ where: { userId: id } });
+  await Session.destroy({ where: { userId: id } });
 
-  const { accessToken, refreshToken } = createTokens({ email });
+  const { accessToken, refreshToken }: ITokens = createTokens({ email });
 
-  // await Session.create({ userId: id, accessToken, refreshToken });
+  await Session.create({ userId: id, accessToken, refreshToken });
 
   return {
-    // user: { id, email, fullname, username },
+    user: { id, email, fullname, username },
     accessToken,
     refreshToken,
   };
@@ -87,18 +97,18 @@ export const refreshTokens = async (
     });
     if (!session) throw new HttpError(401, "Session not found");
 
-    const { user } = session.toJSON();
-    if (!user) throw new HttpError(401, "User not found");
-    const { id, email, fullname, username } = user;
+    // const { user } = session.toJSON();
+    // if (!user) throw new HttpError(401, "User not found");
+    // const { id, email, fullname, username } = user;
 
-    const { accessToken, refreshToken } = createTokens({ email });
+    // const { accessToken, refreshToken } = createTokens({ email });
 
-    await session.update({ accessToken, refreshToken });
+    // await session.update({ accessToken, refreshToken });
 
     return {
-      user: { id, email, fullname, username },
-      accessToken,
-      refreshToken,
+      // user: { id, email, fullname, username },
+      // accessToken,
+      // refreshToken,
     };
   } catch (error: any) {
     throw new HttpError(401, error.message);
@@ -134,5 +144,5 @@ export const confirmResetPassword = async (
 
   const passwordHash = await hashPassword(newPassword);
   await user.update({ password: passwordHash });
-  await Session.destroy({ where: { userId: user.get("id") } });
+  // await Session.destroy({ where: { userId: user.get("id") } });
 };
