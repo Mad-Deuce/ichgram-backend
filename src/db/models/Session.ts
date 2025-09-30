@@ -1,16 +1,8 @@
 import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../sequelize";
-import User from "./User";
 
-import { IUser } from "./User";
-
-export interface ISession {
-  userId: number;
-  accessToken: string;
-  refreshToken?: string;
-  user?: IUser;
-}
+import { ISession } from "../../typescript/interfaces";
 
 class Session extends Model<ISession, ISession> {}
 

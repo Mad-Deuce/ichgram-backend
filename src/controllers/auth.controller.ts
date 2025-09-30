@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { IAuthRequest } from "../typescript/interfaces";
+import { IUser } from "../typescript/interfaces";
 
 import { setAuthCookies, clearAuthCookies } from "../utils/setupAuthCookies";
 
@@ -13,7 +14,8 @@ import {
   resetPassword,
   updatePassword,
 } from "../services/auth.service";
-import { IUser } from "../db/models/User";
+
+
 
 export const signupController = async (
   req: Request,
@@ -52,7 +54,7 @@ export const refreshController = async (req: Request, res: Response) => {
 };
 
 export const logoutController = async (req: Request, res: Response) => {
-  // await logoutUser(req.user.id);
+  await logoutUser((req as IAuthRequest).user);
   clearAuthCookies(res);
   res.json({ message: "Logout successfully, redirect to Login Page" });
 };

@@ -28,6 +28,8 @@ authRouter.get("/verify", checkQueryToken, emailConfirmController);
 authRouter.post("/login", validateBody(loginSchema), loginController);
 authRouter.get("/refresh", refreshController);
 
+authRouter.get("/logout", authenticate, logoutController);
+
 authRouter.post("/reset", validateBody(emailSchema), resetPasswordController);
 authRouter.put(
   "/update",
@@ -36,13 +38,8 @@ authRouter.put(
   updatePasswordController
 );
 
-// authRouter.get("/logout", authenticate, logoutController);
 
-// authRouter.post(
-//   "/reset-password",
-//   checkConfirmationByEmail,
-//   validateBody(passwordSchema),
-//   confirmResetPasswordController
-// );
+
+
 
 export default authRouter;

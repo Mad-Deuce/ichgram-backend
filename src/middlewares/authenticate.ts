@@ -7,6 +7,7 @@ import HttpError from "../typescript/classes/HttpError";
 
 import Session from "../db/models/Session";
 import User from "../db/models/User";
+import { string } from "joi";
 
 const { JWT_SECRET = "secret" } = process.env;
 
@@ -16,14 +17,13 @@ const authenticate = async (req: Request, res: Response, next: any) => {
     if (!accessToken) throw new HttpError(401, "AccessToken not found");
     jwt.verify(accessToken, JWT_SECRET);
 
-    const session: Session | null = await Session.findOne({
+    const session: (Session & { user?: User }) | null = await Session.findOne({
       where: { accessToken: accessToken },
+      include: { model: User, as: "user" },
     });
     if (!session) throw new HttpError(401, "Session not found");
 
-    const user: User | null = await User.findByPk(
-      session.get("userId") as number
-    );
+    const user: User | undefined = session.user;
     if (!user) throw new HttpError(401, "User not found");
     (req as IAuthRequest).user = user;
 
@@ -32,5 +32,7 @@ const authenticate = async (req: Request, res: Response, next: any) => {
     throw new HttpError(401, "Invalid token payload");
   }
 };
+
+
 
 export default authenticate;

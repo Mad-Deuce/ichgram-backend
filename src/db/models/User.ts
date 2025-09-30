@@ -2,19 +2,10 @@ import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../sequelize";
 
+import { IUser } from "../../typescript/interfaces";
 import Roles from "../../constants/Roles";
 
 import { emailPattern } from "../../validation/patterns/auth.patterns";
-
-export interface IUser {
-  id: number;
-  email: string;
-  isVerified: boolean;
-  password: string;
-  role: Roles;
-  fullname: string;
-  username: string;
-}
 
 class User extends Model<IUser, IUser> {}
 
@@ -22,8 +13,8 @@ User.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement:true,
-      primaryKey:true,
+      autoIncrement: true,
+      primaryKey: true,
       allowNull: false,
       unique: true,
     },
