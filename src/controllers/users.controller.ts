@@ -11,6 +11,7 @@ import {
   updateEmail,
   updateRole,
 } from "../services/users.service";
+import { IAuthRequest } from "../typescript/interfaces";
 
 export const getUsersController = async (req: Request, res: Response) => {
   const users = await getAllUsers();
@@ -18,10 +19,12 @@ export const getUsersController = async (req: Request, res: Response) => {
 };
 
 export const deleteController = async (req: Request, res: Response) => {
-  await deleteUser(req.auth.user.email);
+  await deleteUser((req as IAuthRequest).user);
   clearAuthCookies(res);
   res.json({
-    message: `Confirm account delete, a message containing a confirmation link has been sent to email: ${req.auth.user.email}`,
+    message: `Confirm account delete, a message containing a confirmation link has been sent to email: ${(
+      req as IAuthRequest
+    ).user.get("email")}`,
   });
 };
 
@@ -35,7 +38,7 @@ export const updatePublicDataController = async (
   res: Response
 ) => {
   const { user, accessToken, refreshToken } = await updatePublicData(
-    req.auth.user,
+    (req as IAuthRequest).user,
     req.body
   );
   setAuthCookies(res, accessToken, refreshToken);
@@ -43,10 +46,15 @@ export const updatePublicDataController = async (
 };
 
 export const updateEmailController = async (req: Request, res: Response) => {
-  sendConfirmationMessageToCurrentEmail(req.auth.user, req.body.email);
+  sendConfirmationMessageToCurrentEmail(
+    (req as IAuthRequest).user,
+    req.body.email
+  );
   clearAuthCookies(res);
   res.json({
-    message: `Confirm email change, a message containing a confirmation link has been sent to email: ${req.auth.user.email}`,
+    message: `Confirm email change, a message containing a confirmation link has been sent to email: ${(
+      req as IAuthRequest
+    ).user.get("email")}`,
   });
 };
 
@@ -54,7 +62,10 @@ export const confirmCurrentEmailController = async (
   req: Request,
   res: Response
 ) => {
-  sendConfirmationMessageToNewEmail(req.auth.user, req.query.new_email);
+  sendConfirmationMessageToNewEmail(
+    (req as IAuthRequest).user,
+    req.query.new_email
+  );
   clearAuthCookies(res);
   res.json({
     message: `Confirm new email, a message containing a confirmation link has been sent to email: ${req.query.new_email}`,
@@ -65,7 +76,7 @@ export const confirmNewEmailController = async (
   req: Request,
   res: Response
 ) => {
-  updateEmail(req.auth.user, req.query.new_email);
+  updateEmail((req as IAuthRequest).user, req.query.new_email);
   clearAuthCookies(res);
   res.json({
     message: `Email has been updated`,

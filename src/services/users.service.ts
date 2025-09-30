@@ -21,7 +21,8 @@ export const getAllUsers = async () => {
   });
 };
 
-export const deleteUser = async (email: string) => {
+export const deleteUser = async (user: User) => {
+  const email: string = user.get("email") as string;
   const { confirmationToken } = createTokens({ email });
 
   const verifyEmail = {
@@ -136,5 +137,5 @@ export const updateRole = async (userId: any, newRole: string) => {
     throw new HttpError(404, `Role: ${newRole} not found`);
   }
 
-  await user.update({ roleId: role.get("id") });
+  // await user.update({ roleId: role.get("id") });
 };
