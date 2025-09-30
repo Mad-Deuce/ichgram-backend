@@ -1,10 +1,5 @@
 import { Response } from "express";
 
-const {
-  ACCESS_TOKEN_MAX_AGE_MS = 900000,
-  REFRESH_TOKEN_MAX_AGE_MS = 604800000,
-} = process.env;
-
 export const setAuthCookies = (
   res: Response,
   accessToken: string,
@@ -13,12 +8,12 @@ export const setAuthCookies = (
   res
     .cookie("accessToken", accessToken, {
       httpOnly: true,
-      maxAge: Number(ACCESS_TOKEN_MAX_AGE_MS),
+      maxAge: Number(15*60*1000),
       sameSite: "lax",
     })
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      maxAge: Number(REFRESH_TOKEN_MAX_AGE_MS),
+      maxAge: Number(7 * 24 * 60 * 60 * 1000),
       sameSite: "lax",
     });
 };

@@ -65,11 +65,11 @@ export const confirmEmail = async (user: User): Promise<void> => {
 
 export const loginUser = async (email: string, loginPassword: string) => {
   const user: User | null = await User.findOne({ where: { email } });
-  if (!user) throw new HttpError(401, "Email or password invalid");
+  if (!user) throw new HttpError(404, "Email or password invalid");
   const { id, isVerified, password, fullname, username }: IUser = user.toJSON();
 
   if (!(await comparePassword(loginPassword, password)))
-    throw new HttpError(401, "Email or password invalid");
+    throw new HttpError(404, "Email or password invalid");
 
   if (!isVerified) {
     sendConfirmationEmail(email);
@@ -95,34 +95,33 @@ export const loginUser = async (email: string, loginPassword: string) => {
 export const refreshTokens = async (
   currentRefreshToken: string | undefined
 ) => {
+  if (!currentRefreshToken) throw new HttpError(401, "RefreshToken not found");
+
   try {
-    if (!currentRefreshToken)
-      throw new HttpError(401, "RefreshToken not found");
     jwt.verify(currentRefreshToken, JWT_SECRET);
-
-    const session: (Session & { user?: User }) | null = await Session.findOne({
-      where: { refreshToken: currentRefreshToken },
-      include: { model: User, as: "user" },
-    });
-    if (!session) throw new HttpError(401, "Session not found");
-
-    const user: IUser | undefined = session.user?.toJSON();
-    if (!user) throw new HttpError(401, "User not found");
-
-    const { id, email, fullname, username } = user;
-
-    const { accessToken, refreshToken } = createTokens({ email });
-
-    await session.update({ accessToken, refreshToken });
-
-    return {
-      user: { id, email, fullname, username },
-      accessToken,
-      refreshToken,
-    };
   } catch (error: any) {
     throw new HttpError(401, error.message);
   }
+
+  const session: (Session & { user?: User }) | null = await Session.findOne({
+    where: { refreshToken: currentRefreshToken },
+    include: { model: User, as: "user" },
+  });
+  if (!session) throw new HttpError(401, "Session not found");
+
+  const user: IUser | undefined = session.user?.toJSON();
+  if (!user) throw new HttpError(401, "User not found");
+
+  const { email } = user;
+
+  const { accessToken, refreshToken } = createTokens({ email });
+
+  await session.update({ accessToken, refreshToken });
+
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 export const resetPassword = async (email: string) => {

@@ -18,6 +18,7 @@ import {
   logoutController,
   resetPasswordController,
   updatePasswordController,
+  getUserController
 } from "../controllers/auth.controller";
 
 const authRouter: Router = Router();
@@ -27,7 +28,7 @@ authRouter.get("/verify", checkQueryToken, emailConfirmController);
 
 authRouter.post("/login", validateBody(loginSchema), loginController);
 authRouter.get("/refresh", refreshController);
-
+authRouter.get("/current", authenticate, getUserController);
 authRouter.get("/logout", authenticate, logoutController);
 
 authRouter.post("/reset", validateBody(emailSchema), resetPasswordController);

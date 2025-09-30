@@ -15,8 +15,6 @@ import {
   updatePassword,
 } from "../services/auth.service";
 
-
-
 export const signupController = async (
   req: Request,
   res: Response
@@ -46,11 +44,11 @@ export const loginController = async (
 };
 
 export const refreshController = async (req: Request, res: Response) => {
-  const { user, accessToken, refreshToken } = await refreshTokens(
+  const { accessToken, refreshToken } = await refreshTokens(
     req.cookies.refreshToken
   );
   setAuthCookies(res, accessToken, refreshToken);
-  res.json({ message: "Tokens successfully updated", user });
+  res.json({ message: "Tokens successfully updated" });
 };
 
 export const logoutController = async (req: Request, res: Response) => {
@@ -72,5 +70,13 @@ export const updatePasswordController = async (req: Request, res: Response) => {
   clearAuthCookies(res);
   res.json({
     message: "Password successfully updated, redirect to Login Page",
+  });
+};
+
+export const getUserController = async (req: Request, res: Response) => {
+  const { id, email, fullname, username } = (req as IAuthRequest).user.toJSON();
+  res.json({
+    message: "Login successfully",
+    user: { id, email, fullname, username },
   });
 };
