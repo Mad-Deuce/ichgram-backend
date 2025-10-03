@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { getAllSessions } from "../services/sessions.service";
+import { getAllSessions } from "../services/session.service";
 
 export const getSessionsController = async (req: Request, res: Response) => {
   const sessions = await getAllSessions();

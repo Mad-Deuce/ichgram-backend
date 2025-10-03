@@ -4,9 +4,9 @@ import cookieParser from "cookie-parser";
 
 import notFoundHandler from "./middlewares/notFoundHandler";
 import errorHandler from "./middlewares/errorHandler";
-import authenticate from "./middlewares/authenticate";
 
 import authRouter from "./routers/auth.router";
+import postRouter from "./routers/post.router";
 
 const corsOptions = {
   origin: process.env.FRONTEND_BASE_URL || "http://localhost:5173",
@@ -18,8 +18,10 @@ const startServer = (): void => {
   app.use(cors(corsOptions));
   app.use(cookieParser());
   app.use(express.json());
+  app.use(express.static("public"));
 
   app.use("/api/auth", authRouter);
+  app.use("/api/posts", postRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

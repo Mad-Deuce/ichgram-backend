@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import Roles from "../constants/Roles";
+import NotificationTypes from "../constants/NotificationTypes";
 import User from "../db/models/User";
 
 export interface ISession {
@@ -29,4 +30,20 @@ export interface IMiddleware {
 
 export interface IHttpError extends Error {
     status: number;
+}
+
+export interface IPost {
+  id: number;
+  userId: number;
+  title: string;
+  content: string;
+  image: string;
+}
+
+export interface INotification {
+  id: number;
+  authorId: number;
+  type: NotificationTypes;
+  userId: number;
+  postId: number;
 }
