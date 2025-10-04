@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "node:path";
 
 import notFoundHandler from "./middlewares/notFoundHandler";
 import errorHandler from "./middlewares/errorHandler";
@@ -18,7 +19,8 @@ const startServer = (): void => {
   app.use(cors(corsOptions));
   app.use(cookieParser());
   app.use(express.json());
-  app.use(express.static("public"));
+  app.use(express.static(path.resolve('images')));
+  
 
   app.use("/api/auth", authRouter);
   app.use("/api/posts", postRouter);
