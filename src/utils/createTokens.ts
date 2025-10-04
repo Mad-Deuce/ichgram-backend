@@ -13,7 +13,7 @@ const createTokens = (payload: any): ITokens => {
     expiresIn: "15m",
   });
   const accessToken: string = jwt.sign(payload, JWT_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "60m",
   });
   const refreshToken: string = jwt.sign(payload, JWT_SECRET, {
     expiresIn: "7d",

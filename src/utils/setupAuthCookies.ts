@@ -8,7 +8,7 @@ export const setAuthCookies = (
   res
     .cookie("accessToken", accessToken, {
       httpOnly: true,
-      maxAge: Number(15*60*1000),
+      maxAge: Number(60*60*1000),
       sameSite: "lax",
     })
     .cookie("refreshToken", refreshToken, {

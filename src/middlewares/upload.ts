@@ -24,6 +24,8 @@ const limits = {
 };
 
 const fileFilter = (req: Request, file:any, cb:any) => {
+  console.log("file: ", file);
+  
   const extension = file.originalname.split(".").pop();
   if (extension === "exe") {
     return cb(new HttpError(400, ".exe extension not allow"));
