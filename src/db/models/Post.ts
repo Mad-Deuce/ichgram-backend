@@ -3,6 +3,7 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../sequelize";
 
 import { IPost } from "../../typescript/interfaces";
+import Comment from "./Comment";
 
 class Post extends Model<IPost, IPost> {}
 
@@ -29,6 +30,12 @@ Post.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    totalComments: {
+      type: DataTypes.VIRTUAL,
+      get: function() {
+        return (this.get("comments") as Comment[]).length
+      }
+    }
   },
   {
     sequelize,

@@ -37,6 +37,8 @@ export interface IPost {
   id: number;
   userId: number;
   image: string;
+  comments?: IComment[];
+  totalComments?: number;
 }
 
 export interface IComment {
