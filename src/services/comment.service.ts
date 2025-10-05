@@ -1,6 +1,3 @@
-import Post from "../db/models/Post";
-import User from "../db/models/User";
-import { IPost } from "../typescript/interfaces";
 import { IComment } from "../typescript/interfaces";
 import Comment from "../db/models/Comment";
 
