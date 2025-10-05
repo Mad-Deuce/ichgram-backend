@@ -2,6 +2,8 @@ import Post from "../db/models/Post";
 import User from "../db/models/User";
 import Comment from "../db/models/Comment";
 import { IPost } from "../typescript/interfaces";
+import sequelize from "../db/sequelize";
+import { literal } from "sequelize";
 
 export const createPost = async (post: IPost): Promise<IPost> => {
   const createdPost: Post = await Post.create({
@@ -23,6 +25,10 @@ export const getLastUpdatedPosts = async (): Promise<IPost[]> => {
       {
         model: Comment,
         as: "comments",
+        order: [
+          ["updatedAt", "DESC"],
+        ],
+
         include: [
           {
             model: User,
