@@ -52,6 +52,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,

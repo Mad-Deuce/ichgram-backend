@@ -1,5 +1,5 @@
 export const up = async (queryInterface, Sequelize) => {
-  await queryInterface.createTable('posts', {
+  await queryInterface.createTable('comments', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -10,9 +10,13 @@ export const up = async (queryInterface, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
-    image: {
-      type: Sequelize.STRING,
-      allowNull: true,
+    postId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    text: {
+      type: Sequelize.TEXT,
+      allowNull: false,
     },
     createdAt: {
       allowNull: false,
@@ -26,6 +30,6 @@ export const up = async (queryInterface, Sequelize) => {
 }
 
 export const down = async (queryInterface, Sequelize) => {
-  await queryInterface.dropTable('posts');
+  await queryInterface.dropTable('comments');
 }
 

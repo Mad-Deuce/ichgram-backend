@@ -18,6 +18,7 @@ export interface IUser {
   role: Roles;
   fullname: string;
   username: string;
+  avatar: string;
 }
 
 export interface IAuthRequest extends Request {
@@ -29,17 +30,21 @@ export interface IMiddleware {
 }
 
 export interface IHttpError extends Error {
-    status: number;
+  status: number;
 }
 
 export interface IPost {
   id: number;
   userId: number;
-  title: string;
-  content: string;
   image: string;
 }
 
+export interface IComment {
+  id: number;
+  userId: number;
+  postId: number;
+  text: string;
+}
 export interface INotification {
   id: number;
   authorId: number;

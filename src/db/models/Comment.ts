@@ -2,11 +2,11 @@ import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../sequelize";
 
-import { IPost } from "../../typescript/interfaces";
+import { IComment } from "../../typescript/interfaces";
 
-class Post extends Model<IPost, IPost> {}
+class Comment extends Model<IComment, IComment> {}
 
-Post.init(
+Comment.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -25,15 +25,25 @@ Post.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    image: {
+    postId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "posts",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
+    },
+    text: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: "post",
+    modelName: "comment",
   }
 );
 
-export default Post;
+export default Comment;
