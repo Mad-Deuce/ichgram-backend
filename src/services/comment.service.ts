@@ -1,9 +1,28 @@
-import { IComment } from "../typescript/interfaces";
+import { IComment, IUser } from "../typescript/interfaces";
 import Comment from "../db/models/Comment";
+import User from "../db/models/User";
+import HttpError from "../typescript/classes/HttpError";
 
-export const createComment = async (comment: IComment): Promise<IComment> => {
+export const createComment = async (
+  comment: IComment
+): Promise<IComment & { user?: IUser }> => {
   const createdComment: Comment = await Comment.create({
     ...comment,
   });
-  return createdComment.toJSON();
+
+  const result: (Comment & { user?: User }) | null = await Comment.findByPk(
+    createdComment.get("id") as number,
+    {
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: { exclude: ["password", "role", "isVerified"] },
+        },
+      ],
+    }
+  );
+  if (!result) throw new HttpError(500, "Something wrong");
+
+  return result.toJSON();
 };

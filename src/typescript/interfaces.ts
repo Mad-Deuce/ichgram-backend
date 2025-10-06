@@ -39,6 +39,9 @@ export interface IPost {
   image: string;
   comments?: IComment[];
   totalComments?: number;
+  likes?: ILike[];
+  totalLikes?: number;
+  isLiked?: boolean;
 }
 
 export interface IComment {
@@ -47,6 +50,20 @@ export interface IComment {
   postId: number;
   text: string;
 }
+
+export interface ILike {
+  id: number;
+  userId: number;
+  postId: number;
+}
+
+// export interface IPostResponse extends IPost{
+//   comments?: IComment[];
+//   totalComments?: number;
+//   totalLikes?: number;
+//   isLiked?: boolean;
+// }
+
 export interface INotification {
   id: number;
   authorId: number;

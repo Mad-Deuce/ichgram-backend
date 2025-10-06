@@ -9,6 +9,7 @@ import errorHandler from "./middlewares/errorHandler";
 import authRouter from "./routers/auth.router";
 import postRouter from "./routers/post.router";
 import commentRouter from "./routers/comment.router";
+import likeRouter from "./routers/like.router";
 
 const corsOptions = {
   origin: process.env.FRONTEND_BASE_URL || "http://localhost:5173",
@@ -26,6 +27,7 @@ const startServer = (): void => {
   app.use("/api/auth", authRouter);
   app.use("/api/posts", postRouter);
   app.use("/api/comments", commentRouter);
+  app.use("/api/likes", likeRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

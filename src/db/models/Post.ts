@@ -4,6 +4,7 @@ import sequelize from "../sequelize";
 
 import { IPost } from "../../typescript/interfaces";
 import Comment from "./Comment";
+import Like from "./Like";
 
 class Post extends Model<IPost, IPost> {}
 
@@ -32,10 +33,16 @@ Post.init(
     },
     totalComments: {
       type: DataTypes.VIRTUAL,
-      get: function() {
-        return (this.get("comments") as Comment[]).length
-      }
-    }
+      get: function () {
+        return (this.get("comments") as Comment[]).length;
+      },
+    },
+    totalLikes: {
+      type: DataTypes.VIRTUAL,
+      get: function () {
+        return (this.get("likes") as Like[]).length;
+      },
+    },
   },
   {
     sequelize,

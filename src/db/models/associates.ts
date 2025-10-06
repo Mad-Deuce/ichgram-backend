@@ -2,6 +2,7 @@ import User from "./User";
 import Session from "./Session";
 import Post from "./Post";
 import Comment from "./Comment";
+import Like from "./Like";
 
 Session.belongsTo(User, {
   foreignKey: "userId",
@@ -39,4 +40,23 @@ Comment.belongsTo(Post, {
 Post.hasMany(Comment, {
   foreignKey: "postId",
   as: "comments",
+});
+
+
+Like.belongsTo(User, {
+  foreignKey: "userId",
+  as: "user",
+});
+User.hasOne(Like, {
+  foreignKey: "userId",
+  as: "likes",
+});
+
+Like.belongsTo(Post, {
+  foreignKey: "postId",
+  as: "post",
+});
+Post.hasMany(Like, {
+  foreignKey: "postId",
+  as: "likes",
 });

@@ -32,7 +32,7 @@ export const getLastUpdatedPostsController = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const posts: IPost[] = await getLastUpdatedPosts();
+  const posts: IPost[] = await getLastUpdatedPosts(Number((req as IAuthRequest).user.get("id")));
   res.status(200).json({
     message: `Request successfully processed`,
     posts,
