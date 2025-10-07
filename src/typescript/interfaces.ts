@@ -64,6 +64,13 @@ export interface ILike {
 //   isLiked?: boolean;
 // }
 
+export interface IFollower {
+  id: number;
+  followerUserId: number;
+  targetUserId: number;
+}
+
+
 export interface INotification {
   id: number;
   authorId: number;

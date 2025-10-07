@@ -3,6 +3,7 @@ import Session from "./Session";
 import Post from "./Post";
 import Comment from "./Comment";
 import Like from "./Like";
+import Follow from "./Follow";
 
 Session.belongsTo(User, {
   foreignKey: "userId",
@@ -13,7 +14,6 @@ User.hasOne(Session, {
   foreignKey: "userId",
   as: "session",
 });
-
 
 Post.belongsTo(User, {
   foreignKey: "userId",
@@ -42,7 +42,6 @@ Post.hasMany(Comment, {
   as: "comments",
 });
 
-
 Like.belongsTo(User, {
   foreignKey: "userId",
   as: "user",
@@ -59,4 +58,22 @@ Like.belongsTo(Post, {
 Post.hasMany(Like, {
   foreignKey: "postId",
   as: "likes",
+});
+
+Follow.belongsTo(User, {
+  foreignKey: "followerUserId",
+  as: "followerUser",
+});
+User.hasMany(Follow, {
+  foreignKey: "followerUserId",
+  as: "follows",
+});
+
+Follow.belongsTo(User, {
+  foreignKey: "targetUserId",
+  as: "targetUser",
+});
+User.hasMany(Follow, {
+  foreignKey: "targetUserId",
+  as: "followers",
 });
