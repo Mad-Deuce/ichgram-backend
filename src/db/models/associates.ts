@@ -60,19 +60,19 @@ Post.hasMany(Like, {
   as: "likes",
 });
 
-Follow.belongsTo(User, {
-  foreignKey: "followerUserId",
-  as: "followerUser",
-});
-User.hasMany(Follow, {
-  foreignKey: "followerUserId",
-  as: "follows",
-});
+// Follow.belongsTo(User, {
+//   foreignKey: "followerUserId",
+//   as: "followerUser",
+// });
+// User.hasMany(Follow, {
+//   foreignKey: "followerUserId",
+//   as: "follows",
+// });
 
-Follow.belongsTo(User, {
-  foreignKey: "targetUserId",
-  as: "targetUser",
-});
+// Follow.belongsTo(User, {
+//   foreignKey: "targetUserId",
+//   as: "targetUser",
+// });
 User.hasMany(Follow, {
   foreignKey: "targetUserId",
   as: "followers",

@@ -49,6 +49,7 @@ export interface IComment {
   userId: number;
   postId: number;
   text: string;
+  updatedAt?: Date;
 }
 
 export interface ILike {
@@ -57,12 +58,12 @@ export interface ILike {
   postId: number;
 }
 
-// export interface IPostResponse extends IPost{
-//   comments?: IComment[];
-//   totalComments?: number;
-//   totalLikes?: number;
-//   isLiked?: boolean;
-// }
+export interface IPostResponse extends IPost {
+  comments?: IComment[];
+  totalComments?: number;
+  totalLikes?: number;
+  isLiked?: boolean;
+}
 
 export interface IFollow {
   id: number;

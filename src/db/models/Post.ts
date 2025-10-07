@@ -34,13 +34,13 @@ Post.init(
     totalComments: {
       type: DataTypes.VIRTUAL,
       get: function () {
-        return (this.get("comments") as Comment[]).length;
+        return (this.get("comments") as Comment[])?.length;
       },
     },
     totalLikes: {
       type: DataTypes.VIRTUAL,
       get: function () {
-        return (this.get("likes") as Like[]).length;
+        return (this.get("likes") as Like[])?.length;
       },
     },
   },
