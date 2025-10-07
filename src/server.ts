@@ -10,6 +10,7 @@ import authRouter from "./routers/auth.router";
 import postRouter from "./routers/post.router";
 import commentRouter from "./routers/comment.router";
 import likeRouter from "./routers/like.router";
+import followRouter from "./routers/follow.router";
 
 const corsOptions = {
   origin: process.env.FRONTEND_BASE_URL || "http://localhost:5173",
@@ -21,13 +22,13 @@ const startServer = (): void => {
   app.use(cors(corsOptions));
   app.use(cookieParser());
   app.use(express.json());
-  app.use(express.static(path.resolve('images')));
-  
+  app.use(express.static(path.resolve("images")));
 
   app.use("/api/auth", authRouter);
   app.use("/api/posts", postRouter);
   app.use("/api/comments", commentRouter);
   app.use("/api/likes", likeRouter);
+  app.use("/api/follows", followRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

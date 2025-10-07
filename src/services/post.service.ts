@@ -3,6 +3,7 @@ import User from "../db/models/User";
 import Comment from "../db/models/Comment";
 import { IPost } from "../typescript/interfaces";
 import Like from "../db/models/Like";
+import Follow from "../db/models/Follow";
 
 export const createPost = async (post: IPost): Promise<IPost> => {
   const createdPost: Post = await Post.create({
@@ -24,6 +25,20 @@ export const getLastUpdatedPosts = async (userId: number): Promise<IPost[]> => {
         model: User,
         as: "user",
         attributes: { exclude: ["password", "role", "isVerified"] },
+        include: [
+          {
+            model: Follow,
+            as: "follows",
+            include: [
+              {
+                model: User,
+                where: {id: userId},
+                as: "followerUser",
+                attributes: { exclude: ["password", "role", "isVerified"] },
+              },
+            ],
+          },
+        ],
       },
       {
         model: Comment,
@@ -48,7 +63,8 @@ export const getLastUpdatedPosts = async (userId: number): Promise<IPost[]> => {
     ...item,
     comments: item.comments ? item.comments.slice(0, 4) : [],
     isLiked: item.likes
-      ? Array.isArray(item.likes) && item.likes.some((like) => like.userId === userId)
+      ? Array.isArray(item.likes) &&
+        item.likes.some((like) => like.userId === userId)
       : false,
   }));
 };

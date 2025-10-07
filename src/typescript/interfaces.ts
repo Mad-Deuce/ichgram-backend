@@ -64,12 +64,11 @@ export interface ILike {
 //   isLiked?: boolean;
 // }
 
-export interface IFollower {
+export interface IFollow {
   id: number;
   followerUserId: number;
   targetUserId: number;
 }
-
 
 export interface INotification {
   id: number;

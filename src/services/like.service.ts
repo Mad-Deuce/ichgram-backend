@@ -1,4 +1,4 @@
-import { IComment, ILike } from "../typescript/interfaces";
+import {  ILike } from "../typescript/interfaces";
 import Like from "../db/models/Like";
 import HttpError from "../typescript/classes/HttpError";
 

@@ -2,10 +2,9 @@ import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../sequelize";
 
-import { IFollower } from "../../typescript/interfaces";
+import { IFollow } from "../../typescript/interfaces";
 
-
-class Follow extends Model<IFollower, IFollower> {}
+class Follow extends Model<IFollow, IFollow> {}
 
 Follow.init(
   {
