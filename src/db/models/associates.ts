@@ -4,6 +4,7 @@ import Post from "./Post";
 import Comment from "./Comment";
 import Like from "./Like";
 import Follow from "./Follow";
+import Notification from "./Notification";
 
 Session.belongsTo(User, {
   foreignKey: "userId",
@@ -76,4 +77,26 @@ Post.hasMany(Like, {
 User.hasMany(Follow, {
   foreignKey: "targetUserId",
   as: "followers",
+});
+
+// User.hasOne(Notification, {
+//   foreignKey: "authorUserId",
+//   as: "authorUser",
+// });
+Notification.belongsTo(User, {
+  foreignKey: "authorUserId",
+  as: "authorUser",
+});
+User.hasOne(Notification, {
+  foreignKey: "authorUserId",
+  as: "authorUser",
+});
+
+Notification.belongsTo(Post, {
+  foreignKey: "targetPostId",
+  as: "targetPost",
+});
+User.hasOne(Notification, {
+  foreignKey: "targetPostId",
+  as: "targetPost",
 });

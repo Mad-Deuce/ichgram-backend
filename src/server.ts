@@ -11,6 +11,7 @@ import postRouter from "./routers/post.router";
 import commentRouter from "./routers/comment.router";
 import likeRouter from "./routers/like.router";
 import followRouter from "./routers/follow.router";
+import notificationRouter from "./routers/notification.router";
 
 const corsOptions = {
   origin: process.env.FRONTEND_BASE_URL || "http://localhost:5173",
@@ -29,6 +30,7 @@ const startServer = (): void => {
   app.use("/api/comments", commentRouter);
   app.use("/api/likes", likeRouter);
   app.use("/api/follows", followRouter);
+  app.use("/api/notifications", notificationRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
