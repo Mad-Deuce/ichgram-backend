@@ -8,14 +8,12 @@ import createTokens from "../utils/createTokens";
 
 import User from "../db/models/User";
 import Session from "../db/models/Session";
-import Role from "../db/models/Role";
 
 const { BASE_URL, FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
 export const getAllUsers = async () => {
   return await User.findAll({
     include: [
-      { model: Role, as: "role" },
       { model: Session, as: "session" },
     ],
   });
@@ -132,10 +130,10 @@ export const updateRole = async (userId: any, newRole: string) => {
   if (!user) {
     throw new HttpError(404, `User wit id: ${userId} not found`);
   }
-  const role = await Role.findOne({ where: { name: newRole } });
-  if (!role) {
-    throw new HttpError(404, `Role: ${newRole} not found`);
-  }
+  // const role = await Role.findOne({ where: { name: newRole } });
+  // if (!role) {
+  //   throw new HttpError(404, `Role: ${newRole} not found`);
+  // }
 
   // await user.update({ roleId: role.get("id") });
 };

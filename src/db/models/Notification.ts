@@ -51,6 +51,11 @@ Notification.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
+    isViewed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,

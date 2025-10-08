@@ -77,4 +77,5 @@ export interface INotification {
   type: NotificationTypes;
   targetUserId: number;
   targetPostId: number;
+  isViewed: boolean;
 }

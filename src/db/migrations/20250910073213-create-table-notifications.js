@@ -22,6 +22,11 @@ export const up = async (queryInterface, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: true,
     },
+    isViewed: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
