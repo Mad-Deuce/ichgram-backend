@@ -1,7 +1,7 @@
 enum NotificationTypes {
-  LIKED = "liked your post",
-  COMMENTED = "commented your post",
-  FOLLOWED = "started following"
+  LIKED = "LIKED",
+  COMMENTED = "COMMENTED",
+  FOLLOWED = "FOLLOWED",
 }
 
 export default NotificationTypes;

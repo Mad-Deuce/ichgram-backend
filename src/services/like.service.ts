@@ -1,15 +1,24 @@
 import { Op, Sequelize } from "sequelize";
 
-import { ILike, IUser } from "../typescript/interfaces";
+import { ILike, INotification, IUser } from "../typescript/interfaces";
 import Like from "../db/models/Like";
 import HttpError from "../typescript/classes/HttpError";
 import User from "../db/models/User";
+import { emitNotificationEvent } from "../eventHandler/notificationEventsHandler";
+import NotificationTypes from "../constants/NotificationTypes";
 
 export const createLike = async (like: ILike): Promise<ILike> => {
   const [createdLike, isCreated]: [Like, boolean] = await Like.findOrCreate({
     where: { ...like },
   });
   if (!isCreated) throw new HttpError(409, "The post has already been liked");
+
+  emitNotificationEvent({
+    authorUserId: like.userId,
+    type: NotificationTypes.LIKED,
+    targetPostId: like.postId,
+  } as INotification);
+
   return createdLike.toJSON();
 };
 
@@ -29,6 +38,8 @@ export const getLikesCount = async (
   const likes: (ILike & { count?: number })[] = likeCounts.map((like) =>
     like.toJSON()
   );
+
+
 
   return likes;
 };

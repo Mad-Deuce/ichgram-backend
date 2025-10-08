@@ -16,6 +16,7 @@ import Follow from "../db/models/Follow";
 
 import { getCommentsByPostIds } from "./comment.service";
 import { getLikesCount, isPostsLiked } from "./like.service";
+import HttpError from "../typescript/classes/HttpError";
 
 export const createPost = async (post: IPost): Promise<IPost> => {
   const createdPost: Post = await Post.create({
@@ -149,4 +150,16 @@ export const getLastUpdatedPostsAlt = async (
         item.likes.some((like) => like.userId === userId)
       : false,
   }));
+};
+
+export const getPostById = async (postId: number): Promise<IPost> => {
+  const result: (Post & { user?: User }) | null = await Post.findByPk(postId, {
+    include: {
+      model: User,
+      as: "user",
+    },
+  });
+  if (!result) throw new HttpError(404, "user not found");
+
+  return result.toJSON();
 };

@@ -73,8 +73,8 @@ export interface IFollow {
 
 export interface INotification {
   id: number;
-  authorId: number;
+  authorUserId: number;
   type: NotificationTypes;
-  userId: number;
-  postId: number;
+  targetUserId: number;
+  targetPostId: number;
 }

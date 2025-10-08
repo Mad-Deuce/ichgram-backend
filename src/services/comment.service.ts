@@ -1,9 +1,12 @@
 import { Op } from "sequelize";
 
-import { IComment, IUser } from "../typescript/interfaces";
+import { IComment, INotification, IUser } from "../typescript/interfaces";
 import Comment from "../db/models/Comment";
 import User from "../db/models/User";
 import HttpError from "../typescript/classes/HttpError";
+
+import NotificationTypes from "../constants/NotificationTypes";
+import { emitNotificationEvent } from "../eventHandler/notificationEventsHandler"; 
 
 export const createComment = async (
   comment: IComment
@@ -25,6 +28,12 @@ export const createComment = async (
     }
   );
   if (!result) throw new HttpError(500, "Something wrong");
+
+  emitNotificationEvent({
+    authorUserId: comment.userId,
+    type: NotificationTypes.COMMENTED,
+    targetPostId: comment.postId,
+  } as INotification);
 
   return result.toJSON();
 };

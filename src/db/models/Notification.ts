@@ -5,7 +5,6 @@ import sequelize from "../sequelize";
 import { INotification } from "../../typescript/interfaces";
 import NotificationTypes from "../../constants/NotificationTypes";
 
-
 class Notification extends Model<INotification, INotification> {}
 
 Notification.init(
@@ -17,7 +16,7 @@ Notification.init(
       allowNull: false,
       unique: true,
     },
-    authorId: {
+    authorUserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -32,7 +31,7 @@ Notification.init(
       values: Object.values(NotificationTypes),
       allowNull: false,
     },
-    userId: {
+    targetUserId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -42,7 +41,7 @@ Notification.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    postId: {
+    targetPostId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {

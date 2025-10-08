@@ -13,6 +13,6 @@ export const up = async (queryInterface, Sequelize) => {
 }
 
 export const down = async (queryInterface, Sequelize) => {
-  await queryInterface.dropTable('posts');
+  await queryInterface.removeConstraint('FK_Posts_Users');
 }
 
