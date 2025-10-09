@@ -9,9 +9,9 @@ import {
   sendConfirmationMessageToCurrentEmail,
   sendConfirmationMessageToNewEmail,
   updateEmail,
-  updateRole,
+  findByUsername,
 } from "../services/users.service";
-import { IAuthRequest } from "../typescript/interfaces";
+import { IAuthRequest, IUser } from "../typescript/interfaces";
 
 export const getUsersController = async (req: Request, res: Response) => {
   const users = await getAllUsers();
@@ -83,9 +83,13 @@ export const confirmNewEmailController = async (
   });
 };
 
-export const updateRoleController = async (req: Request, res: Response) => {
-  await updateRole(req.params.id, "admin");
-  res.json({
-    message: `Role has been updated`,
+export const findUsersByUsernameController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const users: IUser[] = await findByUsername(req.query.username as string);
+  res.status(200).json({
+    message: `Request successfully processed`,
+    users,
   });
 };

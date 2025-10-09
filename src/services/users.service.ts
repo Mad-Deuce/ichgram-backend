@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { Model } from "sequelize";
+import { Model, Op } from "sequelize";
 
 import HttpError from "../typescript/classes/HttpError";
 import sendEmail from "../utils/sendEmail";
@@ -8,14 +8,13 @@ import createTokens from "../utils/createTokens";
 
 import User from "../db/models/User";
 import Session from "../db/models/Session";
+import { IUser } from "../typescript/interfaces";
 
 const { BASE_URL, FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
 export const getAllUsers = async () => {
   return await User.findAll({
-    include: [
-      { model: Session, as: "session" },
-    ],
+    include: [{ model: Session, as: "session" }],
   });
 };
 
@@ -125,15 +124,17 @@ export const updateEmail = async (user: any, newEmail: any) => {
   await user.update({ email: newEmail });
 };
 
-export const updateRole = async (userId: any, newRole: string) => {
-  const user = await User.findByPk(userId);
-  if (!user) {
-    throw new HttpError(404, `User wit id: ${userId} not found`);
-  }
-  // const role = await Role.findOne({ where: { name: newRole } });
-  // if (!role) {
-  //   throw new HttpError(404, `Role: ${newRole} not found`);
-  // }
+export const findByUsername = async (username: string): Promise<IUser[]> => {
+  console.log("username: ", username);
 
-  // await user.update({ roleId: role.get("id") });
+  const userModels: User[] = await User.findAll({
+    where: {
+      username: {
+        [Op.iLike]: `%${username}%`,
+      },
+    },
+    attributes: { exclude: ["password", "role", "isVerified"] },
+    limit: 5,
+  });
+  return userModels.map((user) => user.toJSON());
 };

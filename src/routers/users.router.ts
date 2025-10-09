@@ -6,7 +6,11 @@ import checkQueryToken from "../middlewares/checkQueryToken";
 import checkRole from "../decorators/checkRole";
 import validateBody from "../decorators/validateBody";
 import { updateSchema } from "../validation/schemas/auth.schemas";
-import { emailSchema, roleSchema } from "../validation/schemas/user.schemas";
+import {
+  emailSchema,
+  roleSchema,
+  usernameSchema,
+} from "../validation/schemas/user.schemas";
 
 import {
   deleteController,
@@ -15,37 +19,37 @@ import {
   updateEmailController,
   confirmCurrentEmailController,
   confirmNewEmailController,
-  updateRoleController,
+  findUsersByUsernameController,
 } from "../controllers/users.controller";
+import validateSearch from "../decorators/validateSearch";
 
-const usersRouter = Router();
+const userRouter = Router();
 
-usersRouter.delete("/delete", authenticate, deleteController);
-usersRouter.get("/delete", checkQueryToken, confirmDeleteController);
+userRouter.delete("/delete", authenticate, deleteController);
+userRouter.get("/delete", checkQueryToken, confirmDeleteController);
 
-usersRouter.put(
+userRouter.put(
   "/",
   authenticate,
   validateBody(updateSchema),
   updatePublicDataController
 );
 
-usersRouter.put(
+userRouter.put(
   "/email",
   authenticate,
   validateBody(emailSchema),
   updateEmailController
 );
 
-usersRouter.get("/email", checkQueryToken, confirmCurrentEmailController);
-usersRouter.get("/new-email", checkQueryToken, confirmNewEmailController);
+userRouter.get("/email", checkQueryToken, confirmCurrentEmailController);
+userRouter.get("/new-email", checkQueryToken, confirmNewEmailController);
 
-usersRouter.put(
-  "/:id/role",
+userRouter.get(
+  "/search",
   authenticate,
-  checkRole(["super"]),
-  validateBody(roleSchema),
-  updateRoleController
+  validateSearch(usernameSchema),
+  findUsersByUsernameController
 );
 
-export default usersRouter;
+export default userRouter;
