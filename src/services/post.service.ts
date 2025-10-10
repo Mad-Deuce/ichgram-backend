@@ -122,7 +122,7 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
     limit: 10,
     order: [["updatedAt", "DESC"]],
     where: {
-      userId,
+      userId: userId,
     },
     include: [
       {
@@ -140,12 +140,13 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
       },
     ],
   });
-  const length = myPostModels.length;
+  const resultLength = myPostModels.length;
   const posts: IPost[] = myPostModels.map((post) => post.toJSON());
-  if (length > 9) return getDetailedPosts(userId, posts);
+  
+  if (resultLength > 9) return getDetailedPosts(userId, posts);
 
   const othersPostModels = await Post.findAll({
-    limit: 10 - length,
+    limit: (10 - resultLength),
     order: [["updatedAt", "DESC"]],
     where: {
       userId: {
@@ -173,9 +174,10 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
   return getDetailedPosts(userId, posts.concat(othersPosts));
 };
 
-export const getPosts = async (userId: number): Promise<any> => {
-  const postIds: number[] = await getPostIds();
-  const posts = await getPostsByIds(userId, postIds);
+export const getPosts = async (): Promise<any> => {
+  const posts = await Post.findAll({
+    limit: 15
+  });
   return posts;
 };
 
