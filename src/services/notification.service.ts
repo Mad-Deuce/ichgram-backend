@@ -20,6 +20,8 @@ export const getPersonalNotification = async (
         targetUserId: userId,
         isViewed: false,
       },
+      order: [["updatedAt", "DESC"]],
+
       limit: 10,
       include: [
         {
@@ -46,12 +48,14 @@ export const getLastUpdates = async (
   const personalNotifications: INotification[] = await getPersonalNotification(
     userId
   );
+
   const resultLength = personalNotifications.length;
   if (resultLength > 9) return personalNotifications;
   const otherNotificationModels: Notification[] = await Notification.findAll({
     where: {
       targetUserId: { [Op.not]: userId },
     },
+    order: [["updatedAt", "ASC"]],
     limit: 10 - resultLength,
   });
   const otherNotifications: INotification[] = otherNotificationModels.map(

@@ -6,7 +6,8 @@ import User from "../db/models/User";
 import HttpError from "../typescript/classes/HttpError";
 
 import NotificationTypes from "../constants/NotificationTypes";
-import { emitNotificationEvent } from "../eventHandler/notificationEventsHandler"; 
+import { emitNotificationEvent } from "../eventHandler/notificationEventsHandler";
+import { updatePostDate } from "./post.service";
 
 export const createComment = async (
   comment: IComment
@@ -28,6 +29,7 @@ export const createComment = async (
     }
   );
   if (!result) throw new HttpError(500, "Something wrong");
+  await updatePostDate(comment.postId);
 
   emitNotificationEvent({
     authorUserId: comment.userId,

@@ -27,30 +27,15 @@ export const createPost = async (post: IPost): Promise<IPost> => {
   return createdPost.toJSON();
 };
 
-const getLastUpdatedPostIds = async (userId: number): Promise<number[]> => {
-  const lastUpdates: INotification[] = await getLastUpdates(userId);
-  const lastUpdatedPostIds: number[] = lastUpdates
-    .map((notification) => notification.targetPostId)
-    .filter((id): id is number => id !== null);
-  const lastUpdatedPostIdsSet: number[] = [...new Set(lastUpdatedPostIds)];
-
-  const resultLength = lastUpdatedPostIdsSet.length;
-  if (resultLength > 9) return lastUpdatedPostIds;
-
+const getPostIds = async (): Promise<number[]> => {
   const postModels: Post[] = await Post.findAll({
-    limit: 10 - resultLength,
     order: [["updatedAt", "DESC"]],
-    where: {
-      id: {
-        [Op.notIn]: lastUpdatedPostIds,
-      },
-    },
+    limit: 20,
     attributes: ["id"],
   });
   const postIds = postModels.map((post) => post.toJSON().id);
 
-  const postIdsSet: number[] = [...new Set(lastUpdatedPostIds.concat(postIds))];
-  return postIdsSet;
+  return postIds;
 };
 
 export const getPostsByIds = async (
@@ -133,19 +118,12 @@ const getDetailedPosts = async (
 };
 
 export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
-  const lastUpdatedPostIds: number[] = await getLastUpdatedPostIds(userId);
-  const posts = await getPostsByIds(userId, lastUpdatedPostIds);
-  const detailedPosts = getDetailedPosts(userId, posts);
-  return detailedPosts;
-};
-
-/**
- * @deprecated The method should not be used
- */
-export const getLastUpdatedPostsAlt2 = async (userId: number): Promise<any> => {
-  const postModels: Post[] = await Post.findAll({
-    limit: 4,
+  const myPostModels = await Post.findAll({
+    limit: 10,
     order: [["updatedAt", "DESC"]],
+    where: {
+      userId,
+    },
     include: [
       {
         model: User,
@@ -162,64 +140,18 @@ export const getLastUpdatedPostsAlt2 = async (userId: number): Promise<any> => {
       },
     ],
   });
+  const length = myPostModels.length;
+  const posts: IPost[] = myPostModels.map((post) => post.toJSON());
+  if (length > 9) return getDetailedPosts(userId, posts);
 
-  const posts: IPostResponse[] = postModels.map((post) => post.toJSON());
-
-  const postIds: number[] = posts.map((post) => post.id);
-
-  const comments: (IComment & { user?: IUser })[] = await getCommentsByPostIds(
-    postIds
-  );
-
-  posts.forEach((post) => {
-    comments.forEach((comment) => {
-      if (post.id === comment.postId) {
-        if (!post.comments) post.comments = [];
-        if (!post.totalComments) post.totalComments = 0;
-        post.comments.push(comment);
-        post.totalComments += 1;
-      }
-    });
-    if (Array.isArray(post.comments)) {
-      post.comments = post.comments
-        .sort((a, b) => (b.updatedAt as any) - (a.updatedAt as any))
-        .slice(0, 4);
-    }
-  });
-
-  const likes: (ILike & { count?: number })[] = await getLikesCount(postIds);
-  const isLiked: ILike[] = await isPostsLiked(postIds, userId);
-
-  posts.forEach((post) => {
-    likes.forEach((like) => {
-      if (post.id === like.postId) {
-        post.totalLikes = like.count;
-      }
-    });
-
-    isLiked.forEach((like) => {
-      if (post.id === like.postId) {
-        post.isLiked = true;
-      }
-    });
-  });
-
-  return posts;
-};
-
-/**
- * @deprecated The method should not be used
- */
-export const getLastUpdatedPostsAlt = async (
-  userId: number
-): Promise<IPost[]> => {
-  const posts: (Post & {
-    user?: User;
-    comments?: Comment[];
-    likes?: Like[];
-  })[] = await Post.findAll({
-    limit: 4,
+  const othersPostModels = await Post.findAll({
+    limit: 10 - length,
     order: [["updatedAt", "DESC"]],
+    where: {
+      userId: {
+        [Op.ne]: userId,
+      },
+    },
     include: [
       {
         model: User,
@@ -229,47 +161,22 @@ export const getLastUpdatedPostsAlt = async (
           {
             model: Follow,
             as: "followers",
-            // where: {followerUserId: userId},
-            // include: [
-            //   {
-            //     model: User,
-            //     where: {id: userId},
-            //     as: "followerUser",
-            //     attributes: { exclude: ["password", "role", "isVerified"] },
-            //   },
-            // ],
+            where: { followerUserId: userId },
+            required: false,
           },
         ],
-      },
-      {
-        model: Comment,
-        as: "comments",
-        order: [["updatedAt", "DESC"]],
-        include: [
-          {
-            model: User,
-            as: "user",
-            attributes: { exclude: ["password", "role", "isVerified"] },
-          },
-        ],
-      },
-      {
-        model: Like,
-        as: "likes",
       },
     ],
   });
-  const result = posts.map((post) => post.toJSON());
-  console.log(result);
+  const othersPosts: IPost[] = othersPostModels.map((post) => post.toJSON());
 
-  return result.map((item) => ({
-    ...item,
-    comments: item.comments ? item.comments.slice(0, 4) : [],
-    isLiked: item.likes
-      ? Array.isArray(item.likes) &&
-        item.likes.some((like) => like.userId === userId)
-      : false,
-  }));
+  return getDetailedPosts(userId, posts.concat(othersPosts));
+};
+
+export const getPosts = async (userId: number): Promise<any> => {
+  const postIds: number[] = await getPostIds();
+  const posts = await getPostsByIds(userId, postIds);
+  return posts;
 };
 
 export const getPostById = async (postId: number): Promise<IPost> => {
@@ -282,4 +189,13 @@ export const getPostById = async (postId: number): Promise<IPost> => {
   if (!result) throw new HttpError(404, "user not found");
 
   return result.toJSON();
+};
+
+export const updatePostDate = async (postId: number): Promise<void> => {
+  const post = await Post.findByPk(postId);
+
+  if (post) {
+    post.changed("updatedAt" as keyof Post, true);
+    await post.update({ updatedAt: new Date() });
+  }
 };

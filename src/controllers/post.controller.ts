@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { IAuthRequest, IPost, IComment } from "../typescript/interfaces";
 
-import { createPost, getLastUpdatedPosts } from "../services/post.service";
+import { createPost, getLastUpdatedPosts, getPosts } from "../services/post.service";
 import { createComment } from "../services/comment.service";
 import HttpError from "../typescript/classes/HttpError";
 
@@ -33,6 +33,17 @@ export const getLastUpdatedPostsController = async (
   res: Response
 ): Promise<void> => {
   const posts: IPost[] = await getLastUpdatedPosts(Number((req as IAuthRequest).user.get("id")));
+  res.status(200).json({
+    message: `Request successfully processed`,
+    posts,
+  });
+};
+
+export const getPostsController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const posts: IPost[] = await getPosts(Number((req as IAuthRequest).user.get("id")));
   res.status(200).json({
     message: `Request successfully processed`,
     posts,

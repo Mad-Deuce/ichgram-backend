@@ -6,7 +6,7 @@ import upload from "../middlewares/upload";
 import validateBody from "../decorators/validateBody";
 import { createPostSchema } from "../validation/schemas/post.schemas";
 
-import { createPostController, getLastUpdatedPostsController } from "../controllers/post.controller";
+import { createPostController, getLastUpdatedPostsController, getPostsController } from "../controllers/post.controller";
 
 const postRouter: Router = Router();
 
@@ -18,5 +18,6 @@ postRouter.post(
   createPostController
 );
 postRouter.get("/updates", authenticate, getLastUpdatedPostsController)
+postRouter.get("/", authenticate, getPostsController)
 
 export default postRouter;

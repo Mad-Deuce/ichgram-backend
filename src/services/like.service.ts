@@ -6,12 +6,15 @@ import HttpError from "../typescript/classes/HttpError";
 import User from "../db/models/User";
 import { emitNotificationEvent } from "../eventHandler/notificationEventsHandler";
 import NotificationTypes from "../constants/NotificationTypes";
+import { updatePostDate } from "./post.service";
 
 export const createLike = async (like: ILike): Promise<ILike> => {
   const [createdLike, isCreated]: [Like, boolean] = await Like.findOrCreate({
     where: { ...like },
   });
   if (!isCreated) throw new HttpError(409, "The post has already been liked");
+
+  await updatePostDate(like.postId);
 
   emitNotificationEvent({
     authorUserId: like.userId,
@@ -38,8 +41,6 @@ export const getLikesCount = async (
   const likes: (ILike & { count?: number })[] = likeCounts.map((like) =>
     like.toJSON()
   );
-
-
 
   return likes;
 };

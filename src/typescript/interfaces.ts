@@ -37,6 +37,7 @@ export interface IPost {
   id: number;
   userId: number;
   image: string;
+  updatedAt?: Date,
   comments?: IComment[];
   totalComments?: number;
   likes?: ILike[];
