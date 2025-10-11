@@ -56,6 +56,14 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    about: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    website: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,

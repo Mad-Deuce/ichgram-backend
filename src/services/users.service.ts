@@ -9,6 +9,12 @@ import createTokens from "../utils/createTokens";
 import User from "../db/models/User";
 import Session from "../db/models/Session";
 import { IUser } from "../typescript/interfaces";
+import { countPostsByUser } from "./post.service";
+import {
+  countFollowersByUser,
+  countFollowsByUser,
+  hasFollow,
+} from "./follow.service";
 
 const { BASE_URL, FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
@@ -125,8 +131,6 @@ export const updateEmail = async (user: any, newEmail: any) => {
 };
 
 export const findByUsername = async (username: string): Promise<IUser[]> => {
-  console.log("username: ", username);
-
   const userModels: User[] = await User.findAll({
     where: {
       username: {
@@ -137,4 +141,34 @@ export const findByUsername = async (username: string): Promise<IUser[]> => {
     limit: 5,
   });
   return userModels.map((user) => user.toJSON());
+};
+
+export const getUserById = async (
+  id: number,
+  authUserId: number
+): Promise<IUser> => {
+  const userModel: User | null = await User.findByPk(id, {
+    attributes: { exclude: ["password", "role", "isVerified"] },
+  });
+  if (!userModel) throw new HttpError(404, "User not found");
+  const user: IUser & {
+    totalPosts: number;
+    totalFollowers: number;
+    totalFollows: number;
+    isFollowed: boolean;
+  } = userModel.toJSON();
+
+  const totalPosts: number = await countPostsByUser(id);
+  user.totalPosts = totalPosts;
+
+  const totalFollowers: number = await countFollowersByUser(id);
+  user.totalFollowers = totalFollowers;
+
+  const totalFollows: number = await countFollowsByUser(id);
+  user.totalFollows = totalFollows;
+
+  const isFollowed: boolean = await hasFollow(id, authUserId);
+  user.isFollowed = isFollowed;
+
+  return user;
 };

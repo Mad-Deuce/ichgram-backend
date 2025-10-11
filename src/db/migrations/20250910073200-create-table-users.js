@@ -37,6 +37,14 @@ export const up = async (queryInterface, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: true,
     },
+    about: {
+      type: Sequelize.TEXT,
+      allowNull: true,
+    },
+    website: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,

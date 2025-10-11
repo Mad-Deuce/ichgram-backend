@@ -19,6 +19,7 @@ import { getCommentsByPostIds } from "./comment.service";
 import { getLikesCount, isPostsLiked } from "./like.service";
 import HttpError from "../typescript/classes/HttpError";
 import { getLastUpdates } from "./notification.service";
+import { number } from "joi";
 
 export const createPost = async (post: IPost): Promise<IPost> => {
   const createdPost: Post = await Post.create({
@@ -142,11 +143,11 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
   });
   const resultLength = myPostModels.length;
   const posts: IPost[] = myPostModels.map((post) => post.toJSON());
-  
+
   if (resultLength > 9) return getDetailedPosts(userId, posts);
 
   const othersPostModels = await Post.findAll({
-    limit: (10 - resultLength),
+    limit: 10 - resultLength,
     order: [["updatedAt", "DESC"]],
     where: {
       userId: {
@@ -176,7 +177,15 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
 
 export const getPosts = async (): Promise<any> => {
   const posts = await Post.findAll({
-    limit: 15
+    limit: 15,
+  });
+  return posts;
+};
+
+export const findPosts = async (search: IPost): Promise<any> => {
+  const posts = await Post.findAll({
+    limit: 15,
+    where: {...search},
   });
   return posts;
 };
@@ -200,4 +209,12 @@ export const updatePostDate = async (postId: number): Promise<void> => {
     post.changed("updatedAt" as keyof Post, true);
     await post.update({ updatedAt: new Date() });
   }
+};
+
+export const countPostsByUser = async (userId: number): Promise<number> => {
+  return await Post.count({
+    where: {
+      userId,
+    },
+  });
 };

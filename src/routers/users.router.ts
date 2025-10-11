@@ -20,6 +20,7 @@ import {
   confirmCurrentEmailController,
   confirmNewEmailController,
   findUsersByUsernameController,
+  getUserByIdController,
 } from "../controllers/users.controller";
 import validateSearch from "../decorators/validateSearch";
 
@@ -50,6 +51,12 @@ userRouter.get(
   authenticate,
   validateSearch(usernameSchema),
   findUsersByUsernameController
+);
+
+userRouter.get(
+  "/:id",
+  authenticate,
+  getUserByIdController
 );
 
 export default userRouter;

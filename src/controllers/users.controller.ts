@@ -10,6 +10,7 @@ import {
   sendConfirmationMessageToNewEmail,
   updateEmail,
   findByUsername,
+  getUserById,
 } from "../services/users.service";
 import { IAuthRequest, IUser } from "../typescript/interfaces";
 
@@ -91,5 +92,19 @@ export const findUsersByUsernameController = async (
   res.status(200).json({
     message: `Request successfully processed`,
     users,
+  });
+};
+
+export const getUserByIdController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const user: IUser = await getUserById(
+    Number.parseInt(req.params.id as string),
+    Number((req as IAuthRequest).user.get("id"))
+  );
+  res.status(200).json({
+    message: `Request successfully processed`,
+    user,
   });
 };

@@ -18,6 +18,8 @@ export interface IUser {
   role: Roles;
   fullname: string;
   username: string;
+  about: string;
+  website: string;
   avatar: string;
 }
 
@@ -37,7 +39,7 @@ export interface IPost {
   id: number;
   userId: number;
   image: string;
-  updatedAt?: Date,
+  updatedAt?: Date;
   comments?: IComment[];
   totalComments?: number;
   likes?: ILike[];

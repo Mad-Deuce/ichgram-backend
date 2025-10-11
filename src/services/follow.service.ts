@@ -21,3 +21,37 @@ export const createFollow = async (follow: IFollow): Promise<IFollow> => {
   return createdFollow.toJSON();
 };
 
+export const countFollowersByUser = async (
+  targetUserId: number
+): Promise<number> => {
+  return await Follow.count({
+    where: {
+      targetUserId,
+    },
+  });
+};
+
+export const countFollowsByUser = async (
+  followerUserId: number
+): Promise<number> => {
+  return await Follow.count({
+    where: {
+      followerUserId,
+    },
+  });
+};
+
+export const hasFollow = async (
+  targetUserId: number,
+  followerUserId: number
+): Promise<boolean> => {
+  if (targetUserId === followerUserId) return true;
+  const follow: Follow | null = await Follow.findOne({
+    where: {
+      followerUserId,
+      targetUserId,
+    },
+  });
+  if (follow) return true;
+  return false;
+};
