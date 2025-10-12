@@ -72,9 +72,10 @@ export const getPostsByIds = async (
   return result;
 };
 
-const getDetailedPosts = async (
+const detailPosts = async (
   userId: number,
-  posts: IPost[]
+  posts: IPost[],
+  noLimit: boolean = false
 ): Promise<any> => {
   const postIds: number[] = posts.map((post) => post.id);
 
@@ -94,7 +95,10 @@ const getDetailedPosts = async (
     if (Array.isArray(post.comments)) {
       post.comments = post.comments
         .sort((a, b) => (b.updatedAt as any) - (a.updatedAt as any))
-        .slice(0, 4);
+      if (!noLimit) {
+        post.comments = post.comments
+          .slice(0, 4);
+      }
     }
   });
 
@@ -144,7 +148,7 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
   const resultLength = myPostModels.length;
   const posts: IPost[] = myPostModels.map((post) => post.toJSON());
 
-  if (resultLength > 9) return getDetailedPosts(userId, posts);
+  if (resultLength > 9) return detailPosts(userId, posts);
 
   const othersPostModels = await Post.findAll({
     limit: 10 - resultLength,
@@ -172,7 +176,7 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
   });
   const othersPosts: IPost[] = othersPostModels.map((post) => post.toJSON());
 
-  return getDetailedPosts(userId, posts.concat(othersPosts));
+  return detailPosts(userId, posts.concat(othersPosts));
 };
 
 export const getPosts = async (): Promise<any> => {
@@ -185,7 +189,7 @@ export const getPosts = async (): Promise<any> => {
 export const findPosts = async (search: IPost): Promise<any> => {
   const posts = await Post.findAll({
     limit: 15,
-    where: {...search},
+    where: { ...search },
   });
   return posts;
 };
@@ -200,6 +204,38 @@ export const getPostById = async (postId: number): Promise<IPost> => {
   if (!result) throw new HttpError(404, "user not found");
 
   return result.toJSON();
+};
+
+export const getDetailedPostById = async (
+  postId: number,
+  userId: number
+): Promise<IPost> => {
+  const postModel: (Post & { user?: User }) | null = await Post.findByPk(
+    postId,
+    {
+      include: {
+        model: User,
+        as: "user",
+        attributes: { exclude: ["password", "role", "isVerified"] },
+        include: [
+          {
+            model: Follow,
+            as: "followers",
+            where: { followerUserId: userId },
+            required: false,
+          },
+        ],
+      },
+    }
+  );
+  if (!postModel) throw new HttpError(404, "post not found");
+
+  const detailedPost: IPost[] = await detailPosts(userId, [postModel.toJSON()], true);
+
+  if (!detailedPost[0]) {
+    throw new HttpError(404, "Detailed post not found");
+  }
+  return detailedPost[0];
 };
 
 export const updatePostDate = async (postId: number): Promise<void> => {

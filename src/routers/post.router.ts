@@ -6,7 +6,7 @@ import upload from "../middlewares/upload";
 import validateBody from "../decorators/validateBody";
 import { createPostSchema } from "../validation/schemas/post.schemas";
 
-import { createPostController, findPostsController, getLastUpdatedPostsController, getPostsController } from "../controllers/post.controller";
+import { createPostController, findPostsController, getDetailedPostByIdController, getLastUpdatedPostsController, getPostsController } from "../controllers/post.controller";
 
 const postRouter: Router = Router();
 
@@ -19,6 +19,7 @@ postRouter.post(
 );
 postRouter.get("/updates", authenticate, getLastUpdatedPostsController)
 // postRouter.get("/", authenticate, getPostsController)
+postRouter.get("/:id", authenticate, getDetailedPostByIdController)
 postRouter.get("/", authenticate, findPostsController)
 
 export default postRouter;
