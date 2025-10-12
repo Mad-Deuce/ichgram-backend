@@ -10,6 +10,7 @@ import {
   emailSchema,
   roleSchema,
   usernameSchema,
+  userUpdateSchema,
 } from "../validation/schemas/user.schemas";
 
 import {
@@ -23,6 +24,7 @@ import {
   getUserByIdController,
 } from "../controllers/users.controller";
 import validateSearch from "../decorators/validateSearch";
+import upload from "../middlewares/upload";
 
 const userRouter = Router();
 
@@ -32,7 +34,8 @@ userRouter.get("/delete", checkQueryToken, confirmDeleteController);
 userRouter.put(
   "/",
   authenticate,
-  validateBody(updateSchema),
+  upload.single("avatar"),
+  validateBody(userUpdateSchema),
   updatePublicDataController
 );
 
@@ -40,8 +43,12 @@ userRouter.put(
   "/email",
   authenticate,
   validateBody(emailSchema),
+
   updateEmailController
 );
+
+
+
 
 userRouter.get("/email", checkQueryToken, confirmCurrentEmailController);
 userRouter.get("/new-email", checkQueryToken, confirmNewEmailController);

@@ -60,35 +60,19 @@ export const confirmDeleteUser = async (token: any) => {
   }
 };
 
-export const updatePublicData = async (user: Model, newUserData: any) => {
-  if (newUserData.password) {
-    newUserData.password = await hashPassword(newUserData.password);
-  }
-  if (!user) throw new HttpError(404, "User not found");
+export const updatePublicData = async (
+  authUser: User,
+  newUserData: IUser
+): Promise<IUser> => {
+  if (!authUser) throw new HttpError(404, "User not found");
 
-  if (await comparePassword(newUserData.password, String(user.get("password"))))
-    throw new HttpError(401, "Old and new passwords must not match");
+  const updatedUserModel: User = await authUser.update({ ...newUserData });
 
-  delete newUserData.email;
-  delete newUserData.roleId;
-  await user.update({ ...newUserData });
+  const {email, username, fullname, avatar, about, website } = updatedUserModel.toJSON();
+  const updatedUser: IUser = {email, username, fullname, avatar, about, website} as IUser;
 
-  const { id, email, fullname, username } = user.toJSON();
-  const session: any = user.get("session");
 
-  const { accessToken, refreshToken } = createTokens({ email });
-  session.update({ accessToken, refreshToken });
-
-  return {
-    user: {
-      id,
-      email,
-      fullname,
-      username,
-    },
-    accessToken,
-    refreshToken,
-  };
+  return   updatedUser;
 };
 
 export const sendConfirmationMessageToCurrentEmail = async (

@@ -38,11 +38,8 @@ export const updatePublicDataController = async (
   req: Request,
   res: Response
 ) => {
-  const { user, accessToken, refreshToken } = await updatePublicData(
-    (req as IAuthRequest).user,
-    req.body
-  );
-  setAuthCookies(res, accessToken, refreshToken);
+  
+  const user: IUser = await updatePublicData((req as IAuthRequest).user, {...req.body, avatar: req.file?.filename});
   res.json({ message: "User data successfully updated", user });
 };
 
