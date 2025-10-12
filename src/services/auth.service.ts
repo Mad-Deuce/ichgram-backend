@@ -66,7 +66,7 @@ export const confirmEmail = async (user: User): Promise<void> => {
 export const loginUser = async (email: string, loginPassword: string) => {
   const user: User | null = await User.findOne({ where: { email } });
   if (!user) throw new HttpError(404, "Email or password invalid");
-  const { id, isVerified, password, fullname, username }: IUser = user.toJSON();
+  const { id, isVerified, password, fullname, username, avatar }: IUser = user.toJSON();
 
   if (!(await comparePassword(loginPassword, password)))
     throw new HttpError(404, "Email or password invalid");
@@ -86,7 +86,7 @@ export const loginUser = async (email: string, loginPassword: string) => {
   await Session.create({ userId: id, accessToken, refreshToken });
 
   return {
-    user: { id, email, fullname, username },
+    user: { id, email, fullname, username, avatar },
     accessToken,
     refreshToken,
   };
