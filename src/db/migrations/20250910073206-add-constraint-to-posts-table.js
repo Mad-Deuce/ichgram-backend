@@ -13,6 +13,6 @@ export const up = async (queryInterface, Sequelize) => {
 }
 
 export const down = async (queryInterface, Sequelize) => {
-  await queryInterface.removeConstraint('FK_Posts_Users');
+  await queryInterface.removeConstraint('posts', 'FK_Posts_Users');
 }
 

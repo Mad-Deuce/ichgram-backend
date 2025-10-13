@@ -5,6 +5,8 @@ import Comment from "./Comment";
 import Like from "./Like";
 import Follow from "./Follow";
 import Notification from "./Notification";
+import Chat from "./Chat";
+import Message from "./Message";
 
 Session.belongsTo(User, {
   foreignKey: "userId",
@@ -15,6 +17,7 @@ User.hasOne(Session, {
   foreignKey: "userId",
   as: "session",
 });
+// -----------------------------------------------------------------------
 
 Post.belongsTo(User, {
   foreignKey: "userId",
@@ -24,6 +27,7 @@ User.hasMany(Post, {
   foreignKey: "userId",
   as: "posts",
 });
+// -----------------------------------------------------------------------
 
 Comment.belongsTo(User, {
   foreignKey: "userId",
@@ -42,6 +46,7 @@ Post.hasMany(Comment, {
   foreignKey: "postId",
   as: "comments",
 });
+// -----------------------------------------------------------------------
 
 Like.belongsTo(User, {
   foreignKey: "userId",
@@ -60,6 +65,7 @@ Post.hasMany(Like, {
   foreignKey: "postId",
   as: "likes",
 });
+// -----------------------------------------------------------------------
 
 // Follow.belongsTo(User, {
 //   foreignKey: "followerUserId",
@@ -78,6 +84,7 @@ User.hasMany(Follow, {
   foreignKey: "targetUserId",
   as: "followers",
 });
+// -----------------------------------------------------------------------
 
 // User.hasOne(Notification, {
 //   foreignKey: "authorUserId",
@@ -100,3 +107,43 @@ User.hasOne(Notification, {
   foreignKey: "targetPostId",
   as: "targetPost",
 });
+// -----------------------------------------------------------------------
+Chat.belongsTo(User, {
+  foreignKey: "member1Id",
+  as: "member1",
+});
+User.hasMany(Chat, {
+  foreignKey: "member1Id",
+  as: "chat",
+});
+
+Chat.belongsTo(User, {
+  foreignKey: "member2Id",
+  as: "member2",
+});
+User.hasMany(Chat, {
+  foreignKey: "member2Id",
+  as: "chat",
+});
+
+// -----------------------------------------------------------------------
+
+Message.belongsTo(Chat, {
+  foreignKey: "chatId",
+  as: "chat",
+});
+Chat.hasMany(Message, {
+  foreignKey: "chatId",
+  as: "messages",
+});
+
+Message.belongsTo(User, {
+  foreignKey: "authorId",
+  as: "author",
+});
+User.hasMany(Message, {
+  foreignKey: "authorId",
+  as: "messages",
+});
+
+// -----------------------------------------------------------------------

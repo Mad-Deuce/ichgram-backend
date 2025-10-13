@@ -1,8 +1,8 @@
 export const up = async (queryInterface, Sequelize) => {
-  await queryInterface.addConstraint('likes', {
-    fields: ['userId'], // The column in 'YourTableName' that will be the foreign key
+  await queryInterface.addConstraint('messages', {
+    fields: ['authorId'], // The column in 'YourTableName' that will be the foreign key
     type: 'foreign key',
-    name: 'FK_Likes_Users', // A descriptive name for your constraint
+    name: 'FK_Messages_Users', // A descriptive name for your constraint
     references: {
       table: 'users', // The table being referenced
       field: 'id', // The primary key column in 'ReferenceTableName'
@@ -10,12 +10,12 @@ export const up = async (queryInterface, Sequelize) => {
     onDelete: 'CASCADE', // Optional: Define behavior on deletion of the referenced row
     onUpdate: 'CASCADE', // Optional: Define behavior on update of the referenced row
   });
-  await queryInterface.addConstraint('likes', {
-    fields: ['postId'], // The column in 'YourTableName' that will be the foreign key
+  await queryInterface.addConstraint('messages', {
+    fields: ['chatId'], // The column in 'YourTableName' that will be the foreign key
     type: 'foreign key',
-    name: 'FK_Likes_Posts', // A descriptive name for your constraint
+    name: 'FK_Messages_Chats', // A descriptive name for your constraint
     references: {
-      table: 'posts', // The table being referenced
+      table: 'chats', // The table being referenced
       field: 'id', // The primary key column in 'ReferenceTableName'
     },
     onDelete: 'CASCADE', // Optional: Define behavior on deletion of the referenced row
@@ -24,7 +24,7 @@ export const up = async (queryInterface, Sequelize) => {
 }
 
 export const down = async (queryInterface, Sequelize) => {
-  await queryInterface.removeConstraint('likes','FK_Likes_Users');
-  await queryInterface.removeConstraint('likes','FK_Likes_Posts');
+  await queryInterface.removeConstraint('messages', 'FK_Messages_Users');
+  await queryInterface.removeConstraint('messages', 'FK_Messages_Chats');
 }
 

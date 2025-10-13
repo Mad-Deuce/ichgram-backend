@@ -82,3 +82,16 @@ export interface INotification {
   targetPostId: number;
   isViewed: boolean;
 }
+
+export interface IChat {
+  id: number;
+  member1Id: number;
+  member2Id: number;
+}
+
+export interface IMessage {
+  id: number;
+  chatId: number;
+  authorId: number;
+  text: string;
+}

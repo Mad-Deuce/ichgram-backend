@@ -35,8 +35,8 @@ export const up = async (queryInterface, Sequelize) => {
 }
 
 export const down = async (queryInterface, Sequelize) => {
-  // await queryInterface.removeConstraint('FK_Notifications_UsersAuthor');
-  // await queryInterface.removeConstraint('FK_Notifications_Posts');
-  // await queryInterface.removeConstraint('FK_Notifications_UsersTarget');
+  await queryInterface.removeConstraint('notifications', 'FK_Notifications_UsersAuthor');
+  await queryInterface.removeConstraint('notifications', 'FK_Notifications_Posts');
+  await queryInterface.removeConstraint('notifications', 'FK_Notifications_UsersTarget');
 }
 

@@ -36,8 +36,8 @@ export const up = async (queryInterface, Sequelize) => {
 }
 
 export const down = async (queryInterface, Sequelize) => {
-  await queryInterface.removeConstraint('FK_FollowerUser_Users');
-  await queryInterface.removeConstraint('FK_FollowTargetUser_Users');
-  await queryInterface.removeConstraint('FK_FollowerUser_Users');
+  await queryInterface.removeConstraint('follows', 'FK_FollowerUser_Users');
+  await queryInterface.removeConstraint('follows', 'FK_FollowTargetUser_Users');
+  await queryInterface.removeConstraint('follows', 'FK_FollowerUser_Users');
 }
 

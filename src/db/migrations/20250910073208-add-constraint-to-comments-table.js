@@ -24,7 +24,7 @@ export const up = async (queryInterface, Sequelize) => {
 }
 
 export const down = async (queryInterface, Sequelize) => {
-  await queryInterface.removeConstraint('FK_Comments_Users');
-  await queryInterface.removeConstraint('FK_Comments_Posts');
+  await queryInterface.removeConstraint('comments','FK_Comments_Users');
+  await queryInterface.removeConstraint('comments','FK_Comments_Posts');
 }
 
