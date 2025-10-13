@@ -42,7 +42,7 @@ Message.init(
   },
   {
     sequelize,
-    modelName: "user",
+    modelName: "message",
   }
 );
 

@@ -38,7 +38,7 @@ Chat.init(
   },
   {
     sequelize,
-    modelName: "user",
+    modelName: "chat",
   }
 );
 

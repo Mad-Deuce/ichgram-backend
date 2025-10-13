@@ -112,19 +112,19 @@ Chat.belongsTo(User, {
   foreignKey: "member1Id",
   as: "member1",
 });
-User.hasMany(Chat, {
-  foreignKey: "member1Id",
-  as: "chat",
-});
+// User.hasMany(Chat, {
+//   foreignKey: "member1Id",
+//   as: "chat",
+// });
 
 Chat.belongsTo(User, {
   foreignKey: "member2Id",
   as: "member2",
 });
-User.hasMany(Chat, {
-  foreignKey: "member2Id",
-  as: "chat",
-});
+// User.hasMany(Chat, {
+//   foreignKey: "member2Id",
+//   as: "chat",
+// });
 
 // -----------------------------------------------------------------------
 
