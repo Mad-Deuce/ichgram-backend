@@ -76,6 +76,14 @@ export const getChats = async (userId: number): Promise<IChat[]> => {
         attributes: {
           exclude: ["password", "role", "isVerified"],
         },
+        include: [
+          {
+            model: Message,
+            as: "messages",
+            limit: 1,
+            order: [["updatedAt", "DESC"]],
+          },
+        ],
       },
       {
         model: User,
@@ -83,6 +91,14 @@ export const getChats = async (userId: number): Promise<IChat[]> => {
         attributes: {
           exclude: ["password", "role", "isVerified"],
         },
+        include: [
+          {
+            model: Message,
+            as: "messages",
+            limit: 1,
+            order: [["updatedAt", "DESC"]],
+          },
+        ],
       },
     ],
   });
@@ -91,5 +107,3 @@ export const getChats = async (userId: number): Promise<IChat[]> => {
 
   return chats;
 };
-
-

@@ -5,7 +5,7 @@ import { IChat, IMessage } from "../typescript/interfaces";
 import Chat from "../db/models/Chat";
 import User from "../db/models/User";
 import Message from "../db/models/Message";
-
+import HttpError from "../typescript/classes/HttpError";
 
 export const getMessagesByChatId = async (
   chatId: number
@@ -28,5 +28,20 @@ export const getMessagesByChatId = async (
 
 export const createMessage = async (message: IMessage): Promise<IMessage> => {
   const createdMessage: Message = await Message.create(message);
-  return createdMessage.toJSON();
+  const detailedMessage: Message | null = await Message.findByPk(
+    createdMessage.get("id") as number,
+    {
+      include: [
+        {
+          model: User,
+          as: "author",
+          attributes: {
+            exclude: ["password", "role", "isVerified"],
+          },
+        },
+      ],
+    }
+  );
+  if (!detailedMessage) throw new HttpError(500, "Something wrong");
+  return detailedMessage.toJSON();
 };
