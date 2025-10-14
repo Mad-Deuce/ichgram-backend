@@ -45,3 +45,19 @@ export const createMessage = async (message: IMessage): Promise<IMessage> => {
   if (!detailedMessage) throw new HttpError(500, "Something wrong");
   return detailedMessage.toJSON();
 };
+
+export const getMessageById = async (id: number): Promise<IMessage> => {
+  const messageModel: Message | null = await Message.findByPk(id, {
+    include: [
+      {
+        model: User,
+        as: "author",
+        attributes: {
+          exclude: ["password", "role", "isVerified"],
+        },
+      },
+    ],
+  });
+  if (!messageModel) throw new HttpError(500, "Something wrong");
+  return messageModel.toJSON();
+};
