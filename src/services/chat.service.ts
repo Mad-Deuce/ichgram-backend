@@ -37,20 +37,20 @@ export const findOrCreateChat = async (
           exclude: ["password", "role", "isVerified"],
         },
       },
-      {
-        model: Message,
-        as: "messages",
-        required: false,
-        include: [
-          {
-            model: User,
-            as: "author",
-            attributes: {
-              exclude: ["password", "role", "isVerified"],
-            },
-          },
-        ],
-      },
+      // {
+      //   model: Message,
+      //   as: "messages",
+      //   required: false,
+      //   include: [
+      //     {
+      //       model: User,
+      //       as: "author",
+      //       attributes: {
+      //         exclude: ["password", "role", "isVerified"],
+      //       },
+      //     },
+      //   ],
+      // },
     ],
     defaults: { member1Id, member2Id } as IChat,
   });
