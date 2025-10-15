@@ -93,11 +93,11 @@ const detailPosts = async (
       }
     });
     if (Array.isArray(post.comments)) {
-      post.comments = post.comments
-        .sort((a, b) => (b.updatedAt as any) - (a.updatedAt as any))
+      post.comments = post.comments.sort(
+        (a, b) => (b.updatedAt as any) - (a.updatedAt as any)
+      );
       if (!noLimit) {
-        post.comments = post.comments
-          .slice(0, 4);
+        post.comments = post.comments.slice(0, 4);
       }
     }
   });
@@ -230,7 +230,11 @@ export const getDetailedPostById = async (
   );
   if (!postModel) throw new HttpError(404, "post not found");
 
-  const detailedPost: IPost[] = await detailPosts(userId, [postModel.toJSON()], true);
+  const detailedPost: IPost[] = await detailPosts(
+    userId,
+    [postModel.toJSON()],
+    true
+  );
 
   if (!detailedPost[0]) {
     throw new HttpError(404, "Detailed post not found");
@@ -253,4 +257,9 @@ export const countPostsByUser = async (userId: number): Promise<number> => {
       userId,
     },
   });
+};
+
+export const deletePostById = async (postId: number): Promise<void> => {
+  const result: number = await Post.destroy({ where: { id: postId } });
+  if (!result) throw new HttpError(500, "destroy not completed");
 };

@@ -4,6 +4,7 @@ import { IAuthRequest, IPost, IComment } from "../typescript/interfaces";
 
 import {
   createPost,
+  deletePostById,
   findPosts,
   getDetailedPostById,
   getLastUpdatedPosts,
@@ -82,5 +83,17 @@ export const getDetailedPostByIdController = async (
   res.status(200).json({
     message: `Request successfully processed`,
     post,
+  });
+};
+
+export const deletePostController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const postId = Number(req.params.id);
+  if (!postId) throw new HttpError(400, "Invalid or missing postId");
+  await deletePostById(postId);
+  res.status(200).json({
+    message: `Post successfully deleted`,
   });
 };
