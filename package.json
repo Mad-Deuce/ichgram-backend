@@ -4,7 +4,7 @@
   "description": "ichgram-backend",
   "license": "ISC",
   "author": "",
-  "main": "src/index.ts",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker:up": "docker-compose up",
@@ -15,8 +15,8 @@
     "seed:up": "npx sequelize-cli db:seed:all",
     "seed:down": "npx sequelize-cli db:seed:undo",
     "seed:down_all": "npx sequelize-cli db:seed:undo:all",
-    "start": "npm run build && node dist/index.ts",
-    "dev": "nodemon src/index.ts",
+    "start": "npm run build && node dist/index",
+    "dev": "nodemon src/index",
     "build": "tsc"
   },
   "devDependencies": {
