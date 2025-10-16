@@ -111,6 +111,7 @@ export const refreshTokens = async (
 
   const user: IUser | undefined = session.user?.toJSON();
   if (!user) throw new HttpError(401, "User not found");
+   const { id, fullname, username, avatar }: IUser = user;
 
   const { email } = user;
 
@@ -121,6 +122,7 @@ export const refreshTokens = async (
   return {
     accessToken,
     refreshToken,
+     user: { id, email, fullname, username, avatar },
   };
 };
 

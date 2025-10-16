@@ -68,8 +68,8 @@ export const updatePublicData = async (
 
   const updatedUserModel: User = await authUser.update({ ...newUserData });
 
-  const {email, username, fullname, avatar, about, website } = updatedUserModel.toJSON();
-  const updatedUser: IUser = {email, username, fullname, avatar, about, website} as IUser;
+  const {id, email, username, fullname, avatar, about, website } = updatedUserModel.toJSON();
+  const updatedUser: IUser = {id, email, username, fullname, avatar, about, website} as IUser;
 
 
   return   updatedUser;

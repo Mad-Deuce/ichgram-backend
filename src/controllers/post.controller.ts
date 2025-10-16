@@ -91,8 +91,9 @@ export const deletePostController = async (
   res: Response
 ): Promise<void> => {
   const postId = Number(req.params.id);
+  const userId: number = Number((req as IAuthRequest).user.get("id"));
   if (!postId) throw new HttpError(400, "Invalid or missing postId");
-  await deletePostById(postId);
+  await deletePostById(postId, userId);
   res.status(200).json({
     message: `Post successfully deleted`,
   });

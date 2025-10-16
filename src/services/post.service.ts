@@ -259,7 +259,10 @@ export const countPostsByUser = async (userId: number): Promise<number> => {
   });
 };
 
-export const deletePostById = async (postId: number): Promise<void> => {
+export const deletePostById = async (postId: number, userId: number): Promise<void> => {
+  const deletingPost: Post | null = await Post.findByPk(postId)
+  if (!deletingPost) throw new HttpError(400, "Post not found");
+  if (deletingPost.get("userId") !== userId) throw new HttpError(403, "You are not the owner of the post");
   const result: number = await Post.destroy({ where: { id: postId } });
   if (!result) throw new HttpError(500, "destroy not completed");
 };
