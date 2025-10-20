@@ -4,16 +4,28 @@ import { createServer } from "node:http";
 import Message from "./db/models/Message";
 import { getMessageById } from "./services/message.service";
 
+import authenticateSocket from "./middlewares/authenticateWS";
+import { IAuthSocket } from "./typescript/interfaces";
+
+const corsOptions = {
+  origin: process.env.FRONTEND_BASE_URL || "http://localhost:5173",
+  credentials: true,
+};
+
 const startWebSocketServer = () => {
   const httpServer = createServer();
   const wsServer = new Server(httpServer, {
     cors: {
-      origin: "*",
+      ...corsOptions,
     },
   });
+  wsServer.use(authenticateSocket);
 
   wsServer.on("connection", (socket) => {
-    console.log("new frontend connected");
+    console.log(
+      "--- new frontend connected with user: ",
+      (socket as IAuthSocket).user.toJSON()
+    );
     // const chatId = socket.handshake.query.chatId;
     // console.log("chatId:", chatId);
     // console.log("socket: ", socket);

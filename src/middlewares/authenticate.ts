@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 import { IAuthRequest } from "../typescript/interfaces";
@@ -10,7 +10,11 @@ import User from "../db/models/User";
 
 const { JWT_SECRET = "secret" } = process.env;
 
-const authenticate = async (req: Request, res: Response, next: any) => {
+const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { accessToken } = req.cookies;
   if (!accessToken) throw new HttpError(401, "AccessToken not found");
 

@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import Roles from "../constants/Roles";
 import NotificationTypes from "../constants/NotificationTypes";
 import User from "../db/models/User";
+import { Socket } from "socket.io";
 
 export interface ISession {
   userId: number;
@@ -24,6 +25,10 @@ export interface IUser {
 }
 
 export interface IAuthRequest extends Request {
+  user: User;
+}
+
+export interface IAuthSocket extends Socket {
   user: User;
 }
 
