@@ -1,8 +1,5 @@
-import { Op } from "sequelize";
+import { IMessage } from "../typescript/interfaces";
 
-import { IChat, IMessage } from "../typescript/interfaces";
-
-import Chat from "../db/models/Chat";
 import User from "../db/models/User";
 import Message from "../db/models/Message";
 import HttpError from "../typescript/classes/HttpError";

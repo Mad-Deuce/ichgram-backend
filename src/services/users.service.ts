@@ -1,9 +1,8 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { Model, Op } from "sequelize";
+import { Op } from "sequelize";
 
 import HttpError from "../typescript/classes/HttpError";
 import sendEmail from "../utils/sendEmail";
-import { hashPassword, comparePassword } from "../utils/hashPassword";
 import createTokens from "../utils/createTokens";
 
 import User from "../db/models/User";
@@ -68,11 +67,19 @@ export const updatePublicData = async (
 
   const updatedUserModel: User = await authUser.update({ ...newUserData });
 
-  const {id, email, username, fullname, avatar, about, website } = updatedUserModel.toJSON();
-  const updatedUser: IUser = {id, email, username, fullname, avatar, about, website} as IUser;
+  const { id, email, username, fullname, avatar, about, website } =
+    updatedUserModel.toJSON();
+  const updatedUser: IUser = {
+    id,
+    email,
+    username,
+    fullname,
+    avatar,
+    about,
+    website,
+  } as IUser;
 
-
-  return   updatedUser;
+  return updatedUser;
 };
 
 export const sendConfirmationMessageToCurrentEmail = async (

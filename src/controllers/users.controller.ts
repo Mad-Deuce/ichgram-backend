@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { setAuthCookies, clearAuthCookies } from "../utils/setupAuthCookies";
+import { clearAuthCookies } from "../utils/setupAuthCookies";
 
 import {
   getAllUsers,

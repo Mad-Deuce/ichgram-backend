@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 
 import multer, { StorageEngine } from "multer";
 import path from "node:path";
@@ -8,9 +8,6 @@ import HttpError from "../typescript/classes/HttpError";
 const destination: string = path.resolve("images");
 
 const storage: StorageEngine = multer.diskStorage({
-  // destination: (req, file, cb)=> {
-  //     cb(null, destination);
-  // },
   destination,
   filename: (req, file, cb) => {
     const uniquePreffix = `${Date.now()}_${Math.round(Math.random() * 1e9)}`;

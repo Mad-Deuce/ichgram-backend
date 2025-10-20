@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import { IAuthRequest, ILike } from "../typescript/interfaces";
 
 import { createLike } from "../services/like.service";
-import HttpError from "../typescript/classes/HttpError";
 
 export const createLikeController = async (
   req: Request,

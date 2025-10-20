@@ -3,23 +3,17 @@ import { Op } from "sequelize";
 import {
   IComment,
   ILike,
-  INotification,
   IPost,
-  IPostResponse,
   IUser,
 } from "../typescript/interfaces";
 
 import Post from "../db/models/Post";
 import User from "../db/models/User";
-import Comment from "../db/models/Comment";
-import Like from "../db/models/Like";
 import Follow from "../db/models/Follow";
 
 import { getCommentsByPostIds } from "./comment.service";
 import { getLikesCount, isPostsLiked } from "./like.service";
 import HttpError from "../typescript/classes/HttpError";
-import { getLastUpdates } from "./notification.service";
-import { number } from "joi";
 
 export const createPost = async (post: IPost): Promise<IPost> => {
   const createdPost: Post = await Post.create({
