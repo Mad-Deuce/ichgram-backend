@@ -1,4 +1,4 @@
-import { Socket, ExtendedError } from "socket.io";
+import { Socket, RemoteSocket, ExtendedError } from "socket.io";
 import { serialize, parse } from "cookie";
 import jwt from "jsonwebtoken";
 
@@ -15,7 +15,7 @@ const authenticateSocket = async (
   socket: Socket,
   next: (err?: ExtendedError) => void
 ): Promise<void> => {
-  const cookies: any = parse(socket.handshake.headers.cookie || "");
+  const cookies: Record<string, string> = parse(socket.handshake.headers.cookie || "");
   const accessToken: string | undefined = cookies.accessToken;
 
   if (!accessToken)
@@ -35,7 +35,7 @@ const authenticateSocket = async (
 
   const user: User | undefined = session.user;
   if (!user) return next(new HttpError(401, "User not found"));
-  (socket as IAuthSocket).user = user;
+  (socket as IAuthSocket).user = user.toJSON();
 
   next();
 };

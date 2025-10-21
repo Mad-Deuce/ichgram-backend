@@ -29,7 +29,7 @@ export interface IAuthRequest extends Request {
 }
 
 export interface IAuthSocket extends Socket {
-  user: User;
+  user: IUser;
 }
 
 export interface IMiddleware {

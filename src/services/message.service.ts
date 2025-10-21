@@ -1,8 +1,9 @@
-import { IMessage } from "../typescript/interfaces";
-
 import User from "../db/models/User";
 import Message from "../db/models/Message";
+import Chat from "../db/models/Chat";
+
 import HttpError from "../typescript/classes/HttpError";
+import { IMessage } from "../typescript/interfaces";
 
 export const getMessagesByChatId = async (
   chatId: number
@@ -53,6 +54,7 @@ export const getMessageById = async (id: number): Promise<IMessage> => {
           exclude: ["password", "role", "isVerified"],
         },
       },
+      { model: Chat, as: "chat" },
     ],
   });
   if (!messageModel) throw new HttpError(500, "Something wrong");

@@ -5,7 +5,7 @@ import Message from "./db/models/Message";
 import { getMessageById } from "./services/message.service";
 
 import authenticateSocket from "./middlewares/authenticateWS";
-import { IAuthSocket } from "./typescript/interfaces";
+import { IAuthSocket, IChat, IMessage } from "./typescript/interfaces";
 
 const corsOptions = {
   origin: process.env.FRONTEND_BASE_URL || "http://localhost:5173",
@@ -24,25 +24,26 @@ const startWebSocketServer = () => {
   wsServer.on("connection", (socket) => {
     console.log(
       "--- new frontend connected with user: ",
-      (socket as IAuthSocket).user.toJSON()
+      (socket as IAuthSocket).user
     );
-    // const chatId = socket.handshake.query.chatId;
-    // console.log("chatId:", chatId);
-    // console.log("socket: ", socket);
   });
 
   Message.afterCreate(async (message, options) => {
-    console.log("hook message create: ", message.dataValues);
-    const createdMessage = await getMessageById(message.dataValues.id);
-    // console.log("hook message create options: ", options);
-    // wsServer.emit("newMessage")
+    const createdMessage: IMessage & { chat?: IChat } = await getMessageById(
+      message.dataValues.id
+    );
     const allSockets = await wsServer.fetchSockets();
     allSockets.forEach((socket) => {
       const chatId: number = Number(socket.handshake.query.chatId);
-      if (chatId === message.dataValues.chatId) {
+      const userId: number = Number(
+        (socket as unknown as IAuthSocket).user?.id
+      );
+
+      if (
+        userId === createdMessage?.chat?.member1Id ||
+        userId === createdMessage?.chat?.member2Id
+      ) {
         socket.emit("newMessage", createdMessage);
-        console.log("----------emit--------");
-        console.log("socket: ", socket.id);
       }
     });
   });
