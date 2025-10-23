@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request  } from "express";
 
 import multer, { StorageEngine } from "multer";
 import path from "node:path";
@@ -11,7 +11,7 @@ const storage: StorageEngine = multer.diskStorage({
   destination,
   filename: (
     req: Request,
-    file: Express.Multer.File,
+    file: any,
     cb: (error: Error | null, filename: string) => void
   ) => {
     const uniquePreffix = `${Date.now()}_${Math.round(Math.random() * 1e9)}`;
