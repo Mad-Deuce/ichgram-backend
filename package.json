@@ -15,7 +15,7 @@
     "seed:up": "npx sequelize-cli db:seed:all",
     "seed:down": "npx sequelize-cli db:seed:undo",
     "seed:down_all": "npx sequelize-cli db:seed:undo:all",
-    "start": "npm run build && node dist/index",
+    "start": "npm run build && node dist/index.js",
     "dev": "nodemon src/index",
     "build": "tsc"
   },
