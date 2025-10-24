@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
+import HttpError from "../typescript/classes/HttpError";
+
 const { GOOGLE_EMAIL, GOOGLE_PASSWORD } = process.env;
 
 const nodemailerConfig = {
@@ -16,9 +18,13 @@ const nodemailerConfig = {
 
 const transport = nodemailer.createTransport(nodemailerConfig);
 
-const sendEmail = (payload: any): void => {
+const sendEmail = async (payload: any): Promise<void> => {
   const email = { ...payload, from: GOOGLE_EMAIL };
-  transport.sendMail(email);
+  try {
+    await transport.sendMail(email);
+  } catch (error) {
+    new HttpError(500, `Error while sending mail: ${error}`);
+  }
 };
 
 export default sendEmail;
