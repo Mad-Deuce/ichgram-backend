@@ -1,6 +1,9 @@
-import "dotenv/config"
+// import "dotenv/config"
+require('dotenv/config');
+// const Sequelize = require('@sequelize/core')
+const SqliteDialect = require('@sequelize/sqlite3')
 
-export default {
+const configData = {
   "development": {
     username: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
@@ -10,17 +13,15 @@ export default {
     dialect: "postgres",
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    storage: ':memory:',
+    dialect: "sqlite",
+    pool: { max: 1, idle: Infinity, maxUses: Infinity },
   },
   "production": {
     username: process.env.PROD_DATABASE_USER,
     password: process.env.PROD_DATABASE_PASSWORD,
     database: process.env.PROD_DATABASE_NAME,
-    host: process.env.PROD_DATABASE_HOST,
+    host: process.env.PROD_DATABASE_NAME,
     port: Number(process.env.PROD_DATABASE_PORT),
     dialect: "postgres",
     dialectOptions: {
@@ -31,3 +32,6 @@ export default {
     },
   }
 }
+
+// export default configData;
+module.exports = configData;

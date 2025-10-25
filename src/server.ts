@@ -21,28 +21,47 @@ const corsOptions = {
   credentials: true,
 };
 
-const startServer = (): void => {
-  const app: Express = express();
-  app.use(cors(corsOptions));
-  app.use(cookieParser());
-  app.use(express.json());
-  app.use(express.static(path.resolve("images")));
+const app: Express = express();
+app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.static(path.resolve("images")));
 
-  app.use("/api/auth", authRouter);
-  app.use("/api/posts", postRouter);
-  app.use("/api/comments", commentRouter);
-  app.use("/api/likes", likeRouter);
-  app.use("/api/follows", followRouter);
-  app.use("/api/notifications", notificationRouter);
-  app.use("/api/users", userRouter);
-  app.use("/api/chats", chatRouter);
-  app.use("/api/messages", messageRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/posts", postRouter);
+app.use("/api/comments", commentRouter);
+app.use("/api/likes", likeRouter);
+app.use("/api/follows", followRouter);
+app.use("/api/notifications", notificationRouter);
+app.use("/api/users", userRouter);
+app.use("/api/chats", chatRouter);
+app.use("/api/messages", messageRouter);
 
-  app.use(notFoundHandler);
-  app.use(errorHandler);
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+export const startServer = (): void => {
+  // const app: Express = express();
+  // app.use(cors(corsOptions));
+  // app.use(cookieParser());
+  // app.use(express.json());
+  // app.use(express.static(path.resolve("images")));
+
+  // app.use("/api/auth", authRouter);
+  // app.use("/api/posts", postRouter);
+  // app.use("/api/comments", commentRouter);
+  // app.use("/api/likes", likeRouter);
+  // app.use("/api/follows", followRouter);
+  // app.use("/api/notifications", notificationRouter);
+  // app.use("/api/users", userRouter);
+  // app.use("/api/chats", chatRouter);
+  // app.use("/api/messages", messageRouter);
+
+  // app.use(notFoundHandler);
+  // app.use(errorHandler);
 
   const port: number = Number(process.env.PORT) || 3000;
   app.listen(port, () => console.log(`--- Server start on port ${port} ---`));
 };
 
-export default startServer;
+export default app;
