@@ -5,6 +5,8 @@ import app from "../server";
 import sequelize from "../db/sequelize";
 import User from "../db/models/User";
 
+import createTokens from "../utils/createTokens";
+
 const startDatabase = async () => {
   await sequelize.sync({ force: true });
 };
@@ -33,6 +35,54 @@ describe("Test auth", () => {
         .send(newResourcePayload);
 
       expect(response.statusCode).toBe(201);
+      expect(response.body.message).toBe(expectedMessage);
+    });
+
+    test("should return email successfully verify message", async () => {
+      const email = "zolotukhinpv@i.ua";
+      const password = "passWord1";
+      const { confirmationToken } = createTokens({ email });
+      const expectedMessage = `Email successfully confirmed`;
+      const newResourcePayload = {
+        email,
+        password,
+      };
+      await request(app)
+        .post("/api/auth/signup")
+        .send(newResourcePayload)
+        .expect(201);
+
+      console.log(confirmationToken);
+
+      const response = await request(app)
+        .get(`/api/auth/verify`)
+        .query({ token: confirmationToken });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.message).toBe(expectedMessage);
+    });
+
+    test("should return email verify error", async () => {
+      const email = "zolotukhinpv@i.ua";
+      const password = "passWord1";
+      const { confirmationToken } = createTokens({ email: "zolotukhinpv@gmail.com" });
+      const expectedMessage = `User not found`;
+      const newResourcePayload = {
+        email,
+        password,
+      };
+      await request(app)
+        .post("/api/auth/signup")
+        .send(newResourcePayload)
+        .expect(201);
+
+      console.log(confirmationToken);
+
+      const response = await request(app)
+        .get(`/api/auth/verify`)
+        .query({ token: confirmationToken });
+
+      expect(response.statusCode).toBe(404);
       expect(response.body.message).toBe(expectedMessage);
     });
 
@@ -157,5 +207,4 @@ describe("Test auth", () => {
       expect(response.body.message).toBe(expectedMessage);
     });
   });
-  
 });
