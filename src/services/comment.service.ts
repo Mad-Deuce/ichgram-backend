@@ -23,7 +23,6 @@ export const createComment = async (
         {
           model: User,
           as: "user",
-          attributes: { exclude: ["password", "role", "isVerified"] },
         },
       ],
     }
@@ -51,7 +50,6 @@ export const getCommentsByPostIds = async (
       {
         model: User,
         as: "user",
-        attributes: { exclude: ["password", "role", "isVerified"] },
       },
     ],
   });

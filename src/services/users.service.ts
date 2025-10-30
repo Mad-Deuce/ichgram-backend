@@ -128,7 +128,6 @@ export const findByUsername = async (username: string): Promise<IUser[]> => {
         [Op.iLike]: `%${username}%`,
       },
     },
-    attributes: { exclude: ["password", "role", "isVerified"] },
     limit: 5,
   });
   return userModels.map((user) => user.toJSON());
@@ -138,9 +137,7 @@ export const getUserById = async (
   id: number,
   authUserId: number
 ): Promise<IUser> => {
-  const userModel: User | null = await User.findByPk(id, {
-    attributes: { exclude: ["password", "role", "isVerified"] },
-  });
+  const userModel: User | null = await User.findByPk(id);
   if (!userModel) throw new HttpError(404, "User not found");
   const user: IUser & {
     totalPosts: number;

@@ -48,7 +48,6 @@ export const getPostsByIds = async (
       {
         model: User,
         as: "user",
-        attributes: { exclude: ["password", "role", "isVerified"] },
         include: [
           {
             model: Follow,
@@ -127,7 +126,6 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
       {
         model: User,
         as: "user",
-        attributes: { exclude: ["password", "role", "isVerified"] },
         include: [
           {
             model: Follow,
@@ -156,7 +154,6 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
       {
         model: User,
         as: "user",
-        attributes: { exclude: ["password", "role", "isVerified"] },
         include: [
           {
             model: Follow,
@@ -210,7 +207,6 @@ export const getDetailedPostById = async (
       include: {
         model: User,
         as: "user",
-        attributes: { exclude: ["password", "role", "isVerified"] },
         include: [
           {
             model: Follow,

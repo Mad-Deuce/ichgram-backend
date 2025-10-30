@@ -68,6 +68,10 @@ User.init(
   {
     sequelize,
     modelName: "user",
+    defaultScope: {
+      attributes: { exclude: ["password", "role", "isVerified"] },
+    },
+    scopes: {},
   }
 );
 

@@ -27,7 +27,6 @@ export const getPersonalNotification = async (
         {
           model: User,
           as: "authorUser",
-          attributes: { exclude: ["password", "role", "isVerified"] },
         },
         {
           model: Post,

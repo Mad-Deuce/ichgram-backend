@@ -63,10 +63,14 @@ export const confirmEmail = async (user: User): Promise<void> => {
   await user.update({ isVerified: true });
 };
 
-export const loginUser = async (email: string, loginPassword: string) => {
-  const user: User | null = await User.findOne({ where: { email } });
+export const loginUser = async (
+  email: string,
+  loginPassword: string
+): Promise<{ accessToken: string; refreshToken: string; user: IUser }> => {
+  const user: User | null = await User.unscoped().findOne({ where: { email } });
   if (!user) throw new HttpError(404, "Email or password invalid");
-  const { id, isVerified, password, fullname, username, avatar }: IUser = user.toJSON();
+  const { id, isVerified, password, fullname, username, avatar }: IUser =
+    user.toJSON();
 
   if (!(await comparePassword(loginPassword, password)))
     throw new HttpError(404, "Email or password invalid");
@@ -86,15 +90,15 @@ export const loginUser = async (email: string, loginPassword: string) => {
   await Session.create({ userId: id, accessToken, refreshToken });
 
   return {
-    user: { id, email, fullname, username, avatar },
     accessToken,
     refreshToken,
+    user: { id, email, fullname, username, avatar } as IUser,
   };
 };
 
 export const refreshTokens = async (
   currentRefreshToken: string | undefined
-) => {
+): Promise<{ accessToken: string; refreshToken: string; user: IUser }> => {
   if (!currentRefreshToken) throw new HttpError(401, "RefreshToken not found");
 
   try {
@@ -111,22 +115,19 @@ export const refreshTokens = async (
 
   const user: IUser | undefined = session.user?.toJSON();
   if (!user) throw new HttpError(401, "User not found");
-   const { id, fullname, username, avatar }: IUser = user;
 
-  const { email } = user;
-
-  const { accessToken, refreshToken } = createTokens({ email });
+  const { accessToken, refreshToken } = createTokens({ email: user.email });
 
   await session.update({ accessToken, refreshToken });
 
   return {
     accessToken,
     refreshToken,
-     user: { id, email, fullname, username, avatar },
+    user,
   };
 };
 
-export const resetPassword = async (email: string) => {
+export const resetPassword = async (email: string): Promise<void> => {
   const user: User | null = await User.findOne({
     where: { email },
   });
@@ -135,7 +136,10 @@ export const resetPassword = async (email: string) => {
   await Session.destroy({ where: { userId: user.get("id") as number } });
 };
 
-export const updatePassword = async (user: User, newPassword: string) => {
+export const updatePassword = async (
+  user: User,
+  newPassword: string
+): Promise<void> => {
   if (await comparePassword(newPassword, String(user.get("password"))))
     throw new HttpError(409, "Old and new passwords must not match");
 
@@ -144,6 +148,6 @@ export const updatePassword = async (user: User, newPassword: string) => {
   await Session.destroy({ where: { userId: user.get("id") as number } });
 };
 
-export const logoutUser = async (user: User) => {
+export const logoutUser = async (user: User): Promise<void> => {
   await Session.destroy({ where: { userId: user.get("id") as number } });
 };

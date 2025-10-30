@@ -14,9 +14,6 @@ export const getMessagesByChatId = async (
       {
         model: User,
         as: "author",
-        attributes: {
-          exclude: ["password", "role", "isVerified"],
-        },
       },
     ],
   });
@@ -33,9 +30,6 @@ export const createMessage = async (message: IMessage): Promise<IMessage> => {
         {
           model: User,
           as: "author",
-          attributes: {
-            exclude: ["password", "role", "isVerified"],
-          },
         },
       ],
     }
@@ -50,9 +44,6 @@ export const getMessageById = async (id: number): Promise<IMessage> => {
       {
         model: User,
         as: "author",
-        attributes: {
-          exclude: ["password", "role", "isVerified"],
-        },
       },
       { model: Chat, as: "chat" },
     ],

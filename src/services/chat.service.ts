@@ -26,16 +26,10 @@ export const findOrCreateChat = async (
       {
         model: User,
         as: "member1",
-        attributes: {
-          exclude: ["password", "role", "isVerified"],
-        },
       },
       {
         model: User,
         as: "member2",
-        attributes: {
-          exclude: ["password", "role", "isVerified"],
-        },
       },
     ],
     defaults: { member1Id, member2Id } as IChat,
@@ -59,9 +53,6 @@ export const getChats = async (userId: number): Promise<IChat[]> => {
       {
         model: User,
         as: "member1",
-        attributes: {
-          exclude: ["password", "role", "isVerified"],
-        },
         include: [
           {
             model: Message,
@@ -74,9 +65,6 @@ export const getChats = async (userId: number): Promise<IChat[]> => {
       {
         model: User,
         as: "member2",
-        attributes: {
-          exclude: ["password", "role", "isVerified"],
-        },
         include: [
           {
             model: Message,

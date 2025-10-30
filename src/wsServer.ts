@@ -1,4 +1,4 @@
-import { Server, RemoteSocket } from "socket.io";
+import { Server } from "socket.io";
 import { createServer } from "node:http";
 
 import Message from "./db/models/Message";
@@ -19,7 +19,6 @@ const afterCreateMessage = (wsServer: Server) => {
     );
     const allSockets = await wsServer.fetchSockets();
     allSockets.forEach((socket: any) => {
-      const chatId: number = Number(socket.handshake.query.chatId);
       const userId: number = Number(
         (socket as unknown as IAuthSocket).user?.id
       );
