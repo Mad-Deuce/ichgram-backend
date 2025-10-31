@@ -22,6 +22,8 @@ const corsOptions = {
   credentials: true,
 };
 
+const baseURL = process.env.BASE_URL || "http://localhost:3000"
+
 const app: Express = express();
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -48,6 +50,7 @@ export const startServer = (): void => {
   const port: number = Number(process.env.PORT) || 3000;
   app.listen(port, () => {
     console.log(`--- Server start on port ${port} ---`);
+    console.log(`--- Documentations available at ${baseURL}/docs ---`);
   });
 };
 

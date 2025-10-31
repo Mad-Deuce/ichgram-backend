@@ -22,6 +22,7 @@ import {
 } from "../controllers/auth.controller";
 
 const authRouter: Router = Router();
+
 /**
  * @openapi
  * '/api/auth/signup':
@@ -50,6 +51,34 @@ const authRouter: Router = Router();
  *        description: Server error
  */
 authRouter.post("/signup", validateBody(signupSchema), signupController);
+
+/**
+ * @openapi
+ * '/api/auth/verify':
+ *  get:
+ *     tags:
+ *     - Auth
+ *     summary: Email confirmation 
+ *     parameters:
+ *      - name: token
+ *        in: query
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/schemas/VerifyRequest'
+ *     responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/VerifyResponse'
+ *      401:
+ *        description: Token not found or not valid
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Server error
+ */
 authRouter.get("/verify", checkQueryToken, emailConfirmController);
 
 authRouter.post("/login", validateBody(loginSchema), loginController);

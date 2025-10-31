@@ -11,6 +11,21 @@ import {
  * @openapi
  * components:
  *  schemas:
+ *    VerifyRequest:
+ *      type: string
+ *      default: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpvbG90dWtoaW5wdkBpLnVhIiwiaWF0IjoxNzYxODU3NDA1LCJleHAiOjE3NjI0NjIyMDV9.X1m6rd3UwzwQn4qQf0Sbw3Uyc3ZW2pSG6B8-KDbC4V4'
+ *    VerifyResponse:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          default: 'Email successfully confirmed'
+ */
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
  *    SignupRequest:
  *      type: object
  *      required:
