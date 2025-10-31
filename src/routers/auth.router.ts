@@ -18,11 +18,37 @@ import {
   logoutController,
   resetPasswordController,
   updatePasswordController,
-  getUserController
+  getUserController,
 } from "../controllers/auth.controller";
 
 const authRouter: Router = Router();
-
+/**
+ * @openapi
+ * '/api/auth/signup':
+ *  post:
+ *     tags:
+ *     - Auth
+ *     summary: Register a user
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/SignupRequest'
+ *     responses:
+ *      201:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/SignupResponse'
+ *      400:
+ *        description: Bad request
+ *      409:
+ *        description: Conflict
+ *      500:
+ *        description: Server error
+ */
 authRouter.post("/signup", validateBody(signupSchema), signupController);
 authRouter.get("/verify", checkQueryToken, emailConfirmController);
 
@@ -38,9 +64,5 @@ authRouter.put(
   validateBody(passwordSchema),
   updatePasswordController
 );
-
-
-
-
 
 export default authRouter;

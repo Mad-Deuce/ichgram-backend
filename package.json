@@ -18,7 +18,9 @@
     "seed:down_all": "npx sequelize-cli db:seed:undo:all",
     "start": "npm run build && node dist/index",
     "dev": "nodemon src/index",
-    "build": "tsc"
+    "build": "tsc",
+    "build-docs": "redocly bundle docs/openapi.yaml --ext json -o docs/swagger.json",
+    "preview-docs": "redocly preview-docs"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -34,6 +36,8 @@
     "@types/multer": "^2.0.0",
     "@types/nodemailer": "^7.0.1",
     "@types/supertest": "^6.0.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "babel-cli": "^6.26.0",
     "babel-jest": "^30.2.0",
     "babel-preset-env": "^1.7.0",
@@ -47,6 +51,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@redocly/cli": "^2.9.0",
     "@sequelize/sqlite3": "^7.0.0-alpha.47",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -61,7 +66,9 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.3",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "jest": {
     "preset": "ts-jest",

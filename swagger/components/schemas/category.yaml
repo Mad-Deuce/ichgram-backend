@@ -1,0 +1,18 @@
+type: object
+required:
+  - id
+  - name
+  - image
+properties:
+  id:
+    description: "Category's id"
+    type: number
+    example: 1
+  name:
+    description: "Category's name"
+    type: string
+    example: 'Cats food'
+  image:
+    description: "Link to category's image"
+    type: string
+    example: https://res.cloudinary.com/uqwgdu/image/upload/image.png

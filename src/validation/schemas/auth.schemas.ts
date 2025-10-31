@@ -7,6 +7,36 @@ import {
   usernamePattern,
 } from "../patterns/auth.patterns";
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    SignupRequest:
+ *      type: object
+ *      required:
+ *        - email
+ *        - password
+ *      properties:
+ *        email:
+ *          type: string
+ *          default: jane.doe@example.com
+ *        password:
+ *          type: string
+ *          default: passWord1
+ *        fullname:
+ *          type: string
+ *          default: some fullname
+ *        username:
+ *          type: string
+ *          default: some username
+ *    SignupResponse:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          default: 'Signup successfully, a message containing a confirmation link has been sent to email: jane.doe@example.com'
+ */
+
 export const signupSchema = Joi.object({
   email: Joi.string().trim().pattern(emailPattern.regexp).min(5).required(),
   password: Joi.string()
