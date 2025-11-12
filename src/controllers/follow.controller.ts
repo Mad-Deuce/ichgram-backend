@@ -15,8 +15,5 @@ export const createFollowController = async (
     followerUserId: Number((req as IAuthRequest).user.get("id")),
   });
 
-  res.status(201).json({
-    message: `Follow successfully created`,
-    follow,
-  });
+  res.status(201).json(follow);
 };

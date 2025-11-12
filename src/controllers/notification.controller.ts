@@ -11,8 +11,5 @@ export const getLastNotificationController = async (
   const notifications: INotification[] = await getPersonalNotification(
     Number((req as IAuthRequest).user.get("id"))
   );
-  res.status(200).json({
-    message: `Request successfully processed`,
-    notifications,
-  });
+  res.status(200).json(notifications);
 };

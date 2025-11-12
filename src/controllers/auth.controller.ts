@@ -74,9 +74,8 @@ export const updatePasswordController = async (req: Request, res: Response) => {
 };
 
 export const getUserController = async (req: Request, res: Response) => {
-  const { id, email, fullname, username, avatar, about } = (req as IAuthRequest).user.toJSON();
-  res.json({
-    message: "Login successfully",
-    user: { id, email, fullname, username, avatar, about },
-  });
+  const { id, email, fullname, username, avatar, about } = (
+    req as IAuthRequest
+  ).user.toJSON();
+  res.json({ id, email, fullname, username, avatar, about });
 };

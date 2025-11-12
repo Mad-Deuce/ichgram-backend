@@ -29,10 +29,7 @@ export const createPostController = async (
       text: req.body.comment,
     } as IComment);
   }
-  res.status(201).json({
-    message: `Post successfully created`,
-    post,
-  });
+  res.status(201).json(post);
 };
 
 export const getLastUpdatedPostsController = async (
@@ -42,10 +39,7 @@ export const getLastUpdatedPostsController = async (
   const posts: IPost[] = await getLastUpdatedPosts(
     Number((req as IAuthRequest).user.get("id"))
   );
-  res.status(200).json({
-    message: `Request successfully processed`,
-    posts,
-  });
+  res.status(200).json(posts);
 };
 
 export const getPostsController = async (
@@ -53,10 +47,7 @@ export const getPostsController = async (
   res: Response
 ): Promise<void> => {
   const posts: IPost[] = await getPosts();
-  res.status(200).json({
-    message: `Request successfully processed`,
-    posts,
-  });
+  res.status(200).json(posts);
 };
 
 export const findPostsController = async (
@@ -64,12 +55,8 @@ export const findPostsController = async (
   res: Response
 ): Promise<void> => {
   const search: Partial<IPost> = req.query;
-
   const posts: IPost[] = await findPosts(search as IPost);
-  res.status(200).json({
-    message: `Request successfully processed`,
-    posts,
-  });
+  res.status(200).json(posts);
 };
 
 export const getDetailedPostByIdController = async (
@@ -80,10 +67,7 @@ export const getDetailedPostByIdController = async (
   if (!postId) throw new HttpError(400, "Invalid or missing postId");
   const userId: number = Number((req as IAuthRequest).user.get("id"));
   const post: IPost = await getDetailedPostById(postId, userId);
-  res.status(200).json({
-    message: `Request successfully processed`,
-    post,
-  });
+  res.status(200).json(post);
 };
 
 export const deletePostController = async (
@@ -94,7 +78,5 @@ export const deletePostController = async (
   const userId: number = Number((req as IAuthRequest).user.get("id"));
   if (!postId) throw new HttpError(400, "Invalid or missing postId");
   await deletePostById(postId, userId);
-  res.status(200).json({
-    message: `Post successfully deleted`,
-  });
+  res.status(204).json();
 };

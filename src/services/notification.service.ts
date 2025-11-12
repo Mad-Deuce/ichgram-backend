@@ -3,6 +3,7 @@ import Notification from "../db/models/Notification";
 import { INotification } from "../typescript/interfaces";
 import User from "../db/models/User";
 import Post from "../db/models/Post";
+import HttpError from "../typescript/classes/HttpError";
 
 export const createNotification = async (
   payload: INotification
@@ -21,8 +22,6 @@ export const getPersonalNotification = async (
         isViewed: false,
       },
       order: [["updatedAt", "DESC"]],
-
-      limit: 10,
       include: [
         {
           model: User,
@@ -61,4 +60,26 @@ export const getLastUpdates = async (
     (notification) => notification.toJSON()
   );
   return personalNotifications.concat(otherNotifications);
+};
+
+export const findNotificationById = async (
+  id: number
+): Promise<INotification> => {
+  const notificationModel: (Notification & { authorUser?: User }) | null =
+    await Notification.findByPk(id, {
+      include: [
+        {
+          model: User,
+          as: "authorUser",
+        },
+        {
+          model: Post,
+          as: "targetPost",
+        },
+      ],
+    });
+  if (!notificationModel) throw new HttpError(404, "notification not found");
+
+  const notifications: INotification = notificationModel.toJSON();
+  return notifications;
 };

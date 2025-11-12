@@ -1,11 +1,6 @@
 import { Op } from "sequelize";
 
-import {
-  IComment,
-  ILike,
-  IPost,
-  IUser,
-} from "../typescript/interfaces";
+import { IComment, ILike, IPost, IUser } from "../typescript/interfaces";
 
 import Post from "../db/models/Post";
 import User from "../db/models/User";
@@ -173,6 +168,7 @@ export const getLastUpdatedPosts = async (userId: number): Promise<any> => {
 export const getPosts = async (): Promise<any> => {
   const posts = await Post.findAll({
     limit: 15,
+    
   });
   return posts;
 };
@@ -181,6 +177,19 @@ export const findPosts = async (search: IPost): Promise<any> => {
   const posts = await Post.findAll({
     limit: 15,
     where: { ...search },
+    include: [
+      {
+        model: User,
+        as: "user",
+        include: [
+          {
+            model: Follow,
+            as: "followers",
+            required: false,
+          },
+        ],
+      },
+    ],
   });
   return posts;
 };
@@ -249,10 +258,14 @@ export const countPostsByUser = async (userId: number): Promise<number> => {
   });
 };
 
-export const deletePostById = async (postId: number, userId: number): Promise<void> => {
-  const deletingPost: Post | null = await Post.findByPk(postId)
+export const deletePostById = async (
+  postId: number,
+  userId: number
+): Promise<void> => {
+  const deletingPost: Post | null = await Post.findByPk(postId);
   if (!deletingPost) throw new HttpError(400, "Post not found");
-  if (deletingPost.get("userId") !== userId) throw new HttpError(403, "You are not the owner of the post");
+  if (deletingPost.get("userId") !== userId)
+    throw new HttpError(403, "You are not the owner of the post");
   const result: number = await Post.destroy({ where: { id: postId } });
   if (!result) throw new HttpError(500, "destroy not completed");
 };
