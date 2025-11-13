@@ -40,6 +40,38 @@ export const getPersonalNotification = async (
   return personalNotifications;
 };
 
+export const markNotification = async (
+  userId: number,
+  notificationId: number
+): Promise<number> => {
+  await Notification.update(
+    { isViewed: true },
+    {
+      where: {
+        targetUserId: userId,
+        id: notificationId,
+      },
+    }
+  );
+  return notificationId;
+};
+
+export const markAllNotification = async (
+  userId: number,
+  notificationIds: number[]
+): Promise<number[]> => {
+  await Notification.update(
+    { isViewed: true },
+    {
+      where: {
+        targetUserId: userId,
+        id: { [Op.in]: notificationIds },
+      },
+    }
+  );
+  return notificationIds;
+};
+
 export const getLastUpdates = async (
   userId: number
 ): Promise<INotification[]> => {

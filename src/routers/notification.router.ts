@@ -2,11 +2,17 @@ import { Router } from "express";
 
 import authenticate from "../middlewares/authenticate";
 
-import { getLastNotificationController } from "../controllers/notification.controller";
+import {
+  getLastNotificationController,
+  markAllNotificationsController,
+  markNotificationController,
+} from "../controllers/notification.controller";
 
 const notificationRouter: Router = Router();
 
+notificationRouter.get("/", authenticate, getLastNotificationController);
+notificationRouter.put("/all/mark", authenticate, markAllNotificationsController);
+notificationRouter.put("/:id/mark", authenticate, markNotificationController);
 
-notificationRouter.get("/", authenticate, getLastNotificationController)
 
 export default notificationRouter;
