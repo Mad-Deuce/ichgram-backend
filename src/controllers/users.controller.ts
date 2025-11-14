@@ -38,8 +38,10 @@ export const updatePublicDataController = async (
   req: Request,
   res: Response
 ) => {
-  
-  const user: IUser = await updatePublicData((req as IAuthRequest).user, {...req.body, avatar: req.file?.filename});
+  const user: IUser = await updatePublicData((req as IAuthRequest).user, {
+    ...req.body,
+    avatar: req.file?.filename,
+  });
   res.json({ message: "User data successfully updated", user });
 };
 
@@ -86,10 +88,7 @@ export const findUsersByUsernameController = async (
   res: Response
 ): Promise<void> => {
   const users: IUser[] = await findByUsername(req.query.username as string);
-  res.status(200).json({
-    message: `Request successfully processed`,
-    users,
-  });
+  res.status(200).json(users);
 };
 
 export const getUserByIdController = async (
