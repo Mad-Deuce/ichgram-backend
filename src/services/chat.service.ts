@@ -51,6 +51,15 @@ export const getChats = async (userId: number): Promise<IChat[]> => {
     },
     include: [
       {
+        model: Message,
+        as: "messages",
+        order: [["updatedAt", "DESC"]],
+        include: [{
+          model: User,
+          as: "author"
+        }]
+      },
+      {
         model: User,
         as: "member1",
         include: [
