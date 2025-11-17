@@ -99,8 +99,5 @@ export const getUserByIdController = async (
     Number.parseInt(req.params.id as string),
     Number((req as IAuthRequest).user.get("id"))
   );
-  res.status(200).json({
-    message: `Request successfully processed`,
-    user,
-  });
+  res.status(200).json(user);
 };

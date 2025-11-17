@@ -14,6 +14,7 @@ import {
   countFollowsByUser,
   hasFollow,
 } from "./follow.service";
+import Post from "../db/models/Post";
 
 const { BASE_URL, FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
@@ -137,7 +138,12 @@ export const getUserById = async (
   id: number,
   authUserId: number
 ): Promise<IUser> => {
-  const userModel: User | null = await User.findByPk(id);
+  const userModel: User | null = await User.findByPk(id, {
+    include: {
+      model: Post,
+      as: "posts"
+    }
+  });
   if (!userModel) throw new HttpError(404, "User not found");
   const user: IUser & {
     totalPosts: number;
