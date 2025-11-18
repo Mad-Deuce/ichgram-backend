@@ -138,12 +138,7 @@ export const getUserById = async (
   id: number,
   authUserId: number
 ): Promise<IUser> => {
-  const userModel: User | null = await User.findByPk(id, {
-    include: {
-      model: Post,
-      as: "posts"
-    }
-  });
+  const userModel: User | null = await User.findByPk(id);
   if (!userModel) throw new HttpError(404, "User not found");
   const user: IUser & {
     totalPosts: number;

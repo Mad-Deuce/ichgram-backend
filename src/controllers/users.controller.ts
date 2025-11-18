@@ -42,7 +42,7 @@ export const updatePublicDataController = async (
     ...req.body,
     avatar: req.file?.filename,
   });
-  res.json({ message: "User data successfully updated", user });
+  res.json(user);
 };
 
 export const updateEmailController = async (req: Request, res: Response) => {
