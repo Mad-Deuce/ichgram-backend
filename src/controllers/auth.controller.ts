@@ -20,9 +20,11 @@ export const signupController = async (
   res: Response
 ): Promise<void> => {
   const email: string = await signupUser(req.body);
-  res.status(201).json({
-    message: `Signup successfully, a message containing a confirmation link has been sent to email: ${email}`,
-  });
+  res
+    .status(201)
+    .json(
+      `Signup successfully, a message containing a confirmation link has been sent to email: ${email}`
+    );
 };
 
 export const emailConfirmController = async (
@@ -30,7 +32,7 @@ export const emailConfirmController = async (
   res: Response
 ): Promise<void> => {
   await confirmEmail((req as IAuthRequest).user);
-  res.json({ message: "Email successfully confirmed" });
+  res.json("Email successfully confirmed");
 };
 
 export const loginController = async (
@@ -60,17 +62,15 @@ export const logoutController = async (req: Request, res: Response) => {
 export const resetPasswordController = async (req: Request, res: Response) => {
   await resetPassword(req.body.email);
   clearAuthCookies(res);
-  res.json({
-    message: `Confirm reset password, a message containing a confirmation link has been sent to email: ${req.body.email}`,
-  });
+  res.json(
+    `Confirm reset password, a message containing a confirmation link has been sent to email: ${req.body.email}`
+  );
 };
 
 export const updatePasswordController = async (req: Request, res: Response) => {
   await updatePassword((req as IAuthRequest).user, req.body.password);
   clearAuthCookies(res);
-  res.json({
-    message: "Password successfully updated, redirect to Login Page",
-  });
+  res.json("Password successfully updated, redirect to Login Page");
 };
 
 export const getUserController = async (req: Request, res: Response) => {

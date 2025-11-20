@@ -54,7 +54,7 @@ authRouter.post("/signup", validateBody(signupSchema), signupController);
 
 /**
  * @openapi
- * '/api/auth/verify':
+ * '/api/auth/confirm':
  *  get:
  *     tags:
  *     - Auth
@@ -79,7 +79,7 @@ authRouter.post("/signup", validateBody(signupSchema), signupController);
  *      500:
  *        description: Server error
  */
-authRouter.get("/verify", checkQueryToken, emailConfirmController);
+authRouter.get("/confirm", checkQueryToken, emailConfirmController);
 
 authRouter.post("/login", validateBody(loginSchema), loginController);
 authRouter.get("/refresh", refreshController);

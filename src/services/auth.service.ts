@@ -15,13 +15,13 @@ import Session from "../db/models/Session";
 const { FRONTEND_BASE_URL, JWT_SECRET = "secret" } = process.env;
 
 enum emailTypes {
-  VERIFY = "verify",
+  CONFIRM = "confirm",
   RESET = "reset",
 }
 
 const sendConfirmationEmail = (
   email: string,
-  type: emailTypes = emailTypes.VERIFY
+  type: emailTypes = emailTypes.CONFIRM
 ) => {
   const { confirmationToken }: ITokens = createTokens({
     email,
@@ -29,7 +29,7 @@ const sendConfirmationEmail = (
 
   const verifyEmail = {
     to: email,
-    subject: `${type} email`,
+    subject: `${type}`,
     html: `<a href="${FRONTEND_BASE_URL}/auth/${type}?token=${confirmationToken}" target="_blank">Confirm email</a>`,
   };
   sendEmail(verifyEmail);
