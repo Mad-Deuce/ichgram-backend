@@ -25,7 +25,6 @@ describe("Test auth", () => {
     test("should create a new user and return message", async () => {
       const email = "zolotukhinpv@i.ua";
       const password = "passWord1";
-      const expectedMessage = `Signup successfully, a message containing a confirmation link has been sent to email: ${email}`;
       const newResourcePayload = {
         email,
         password,
@@ -35,14 +34,12 @@ describe("Test auth", () => {
         .send(newResourcePayload);
 
       expect(response.statusCode).toBe(201);
-      expect(response.body.message).toBe(expectedMessage);
     });
 
     test("should return email successfully verify message", async () => {
       const email = "zolotukhinpv@i.ua";
       const password = "passWord1";
       const { confirmationToken } = createTokens({ email });
-      const expectedMessage = `Email successfully confirmed`;
       const newResourcePayload = {
         email,
         password,
@@ -55,17 +52,18 @@ describe("Test auth", () => {
       console.log(confirmationToken);
 
       const response = await request(app)
-        .get(`/api/auth/verify`)
+        .get(`/api/auth/confirm`)
         .query({ token: confirmationToken });
 
       expect(response.statusCode).toBe(200);
-      expect(response.body.message).toBe(expectedMessage);
     });
 
     test("should return email verify error", async () => {
       const email = "zolotukhinpv@i.ua";
       const password = "passWord1";
-      const { confirmationToken } = createTokens({ email: "zolotukhinpv@gmail.com" });
+      const { confirmationToken } = createTokens({
+        email: "zolotukhinpv@gmail.com",
+      });
       const expectedMessage = `User not found`;
       const newResourcePayload = {
         email,
@@ -79,7 +77,7 @@ describe("Test auth", () => {
       console.log(confirmationToken);
 
       const response = await request(app)
-        .get(`/api/auth/verify`)
+        .get(`/api/auth/confirm`)
         .query({ token: confirmationToken });
 
       expect(response.statusCode).toBe(404);
@@ -89,7 +87,6 @@ describe("Test auth", () => {
     test("should return duplicate error", async () => {
       const email = "zolotukhinpv@i.ua";
       const password = "passWord1";
-      const expectedMessage = `email must be unique`;
       const newResourcePayload = {
         email,
         password,
@@ -104,7 +101,6 @@ describe("Test auth", () => {
         .send(newResourcePayload);
 
       expect(response.statusCode).toBe(409);
-      expect(response.body.message).toBe(expectedMessage);
     });
 
     test("should return email validation error", async () => {

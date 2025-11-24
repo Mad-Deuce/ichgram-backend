@@ -55,7 +55,7 @@ export const signupUser = async (payload: IUser): Promise<string> => {
     return email;
   } catch (error: any) {
     await transaction.rollback();
-    throw new HttpError(500, error);
+    throw error;
   }
 };
 

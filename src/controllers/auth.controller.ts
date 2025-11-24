@@ -42,7 +42,7 @@ export const loginController = async (
   const { email, password }: IUser = req.body;
   const { user, accessToken, refreshToken } = await loginUser(email, password);
   setAuthCookies(res, accessToken, refreshToken);
-  res.json({ message: "Login successfully", user });
+  res.json(user);
 };
 
 export const refreshController = async (req: Request, res: Response) => {
