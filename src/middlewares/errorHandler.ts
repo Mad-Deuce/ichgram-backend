@@ -21,12 +21,7 @@ const errorHandler = (
     message = error.errors.map(({ message }) => message).join();
   }
 
-
-    console.log("------0----------", typeof error);
-
   if (error instanceof UniqueConstraintError) {
-    console.log("------1----------",  error);
-
     status = 409;
   }
 
